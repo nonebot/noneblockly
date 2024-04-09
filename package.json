@@ -1,0 +1,14 @@
+{
+  "name": "@noneblockly/workspace-root",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "app": "pnpm --filter app"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "packageManager": "pnpm@8.15.0+"
+}
