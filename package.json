@@ -4,11 +4,15 @@
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "app": "pnpm --filter app"
+    "app": "pnpm --filter app",
+    "format": "prettier --write ."
   },
   "license": "MIT",
   "engines": {
     "node": ">=18.0.0"
   },
-  "packageManager": "pnpm@8.15.0+"
+  "packageManager": "pnpm@8.15.0+",
+  "devDependencies": {
+    "prettier": "^3.2.5"
+  }
 }
