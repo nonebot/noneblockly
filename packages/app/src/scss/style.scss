@@ -1,0 +1,9 @@
+@use "sass:meta";
+
+html[hljs-theme-dark="true"] {
+  @include meta.load-css("highlight.js/scss/github-dark");
+}
+
+html:not([hljs-theme-dark="true"]) {
+  @include meta.load-css("highlight.js/scss/github");
+}
