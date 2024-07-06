@@ -15,21 +15,21 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "@blockly/theme-dark": "^6.0.6",
+    "@blockly/theme-dark": "^7.0.1",
     "@highlightjs/vue-plugin": "^2.1.0",
     "@mdi/js": "^7.4.47",
-    "@vitejs/plugin-vue": "^5.0.4",
-    "typescript": "^5.4.4",
-    "vite": "^5.2.9",
-    "vite-plugin-static-copy": "^1.0.2",
+    "@vitejs/plugin-vue": "^5.0.5",
+    "typescript": "^5.5.2",
+    "vite": "^5.3.1",
+    "vite-plugin-static-copy": "^1.0.5",
     "vite-plugin-vuetify": "^2.0.3",
-    "vue-tsc": "^2.0.13"
+    "vue-tsc": "^2.0.21"
   },
   "dependencies": {
-    "blockly": "^10.4.3",
+    "blockly": "^11.1.1",
     "highlight.js": "^11.9.0",
-    "sass": "^1.75.0",
-    "vue": "^3.4.22",
-    "vuetify": "^3.5.15"
+    "sass": "^1.77.6",
+    "vue": "^3.4.29",
+    "vuetify": "^3.6.10"
   }
 }
