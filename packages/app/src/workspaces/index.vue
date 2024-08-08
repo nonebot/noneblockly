@@ -8,11 +8,18 @@ import ContentPage from "@/components/ContentPage.vue";
 import { optionsStore, workspaceStore } from "@/stores/workspaces";
 import { loadJSON, generateCode } from "@/stores/workspaces";
 // Workspace data
-import toolbox from "@/data/toolbox.json";
 import startBlocks from "@/data/default.json";
 // Blockly config
-import "@/blocks/blocks.js";
+import { blocks } from "@/blocks";
+import { toolbox } from "@/toolbox";
+import { generators } from "@/generators";
+import { pythonGenerator } from "blockly/python";
 import * as ZhHans from "blockly/msg/zh-hans";
+
+Blockly.common.defineBlocks(blocks);
+generators.forEach((generator) => {
+  Object.assign(pythonGenerator.forBlock, generator);
+});
 
 Blockly.setLocale(ZhHans);
 

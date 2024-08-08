@@ -3,96 +3,11 @@
     "languageVersion": 0,
     "blocks": [
       {
-        "type": "nb_handle",
-        "id": "xqk)rwW.*|,ReCZ7GN34",
-        "x": 70,
-        "y": 170,
-        "inputs": {
-          "MATCHER": {
-            "block": {
-              "type": "nb_on_command",
-              "id": "5PM+dBPat=SWc/YmHpk9",
-              "fields": { "CMD": "hello", "TO_ME": true }
-            }
-          },
-          "HANDLE": {
-            "block": {
-              "type": "nb_message_send",
-              "id": "D`1oS0TX)2cFc+=.~t6(",
-              "inline": false,
-              "fields": { "REPLY": false, "AT": true },
-              "inputs": {
-                "MESSAGE": {
-                  "block": {
-                    "type": "nb_message_text",
-                    "id": "[]0ZT%EDhXarR826.C*H",
-                    "fields": { "TEXT": "world" }
-                  }
-                }
-              },
-              "next": {
-                "block": {
-                  "type": "nb_message_send",
-                  "id": "?Dzq2xds$frA|StTBDFb",
-                  "inline": false,
-                  "fields": { "REPLY": false, "AT": false },
-                  "inputs": {
-                    "MESSAGE": {
-                      "block": {
-                        "type": "nb_message_image",
-                        "id": "jhcN}f}wm;3~P?v|tgXs",
-                        "fields": {
-                          "TYPE": "url",
-                          "IMAGE": "https://img.moehu.org/pic.php?id=acgbs"
-                        }
-                      }
-                    }
-                  },
-                  "next": {
-                    "block": {
-                      "type": "nb_message_finish",
-                      "id": "]b`}K:z^KKzyMDq9uEQF",
-                      "inline": false,
-                      "fields": { "REPLY": true, "AT": false },
-                      "inputs": {
-                        "MESSAGE": {
-                          "block": {
-                            "type": "nb_message_merge",
-                            "id": "_%9=l/G=r#,Iv;U|LSRj",
-                            "extraState": { "itemCount": 3 },
-                            "inputs": {
-                              "MESSAGE0": {
-                                "block": {
-                                  "type": "nb_message_text",
-                                  "id": "J2Q:AACuy/oR9q?Em~(B",
-                                  "fields": { "TEXT": "hello" }
-                                }
-                              },
-                              "MESSAGE1": {
-                                "block": {
-                                  "type": "nb_message_text",
-                                  "id": "2cI-I-{p52RzJ5.P,nii",
-                                  "fields": { "TEXT": ", " }
-                                }
-                              },
-                              "MESSAGE2": {
-                                "block": {
-                                  "type": "nb_message_text",
-                                  "id": "QtldsFC_-rC;mlebK[Ns",
-                                  "fields": { "TEXT": "world" }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
+        "type": "nonebot_on_command",
+        "id": "y$HwnY`3dr4Lk=5D7D18",
+        "x": 330,
+        "y": 250,
+        "fields": { "CMD": "指令", "TO_ME": false }
       }
     ]
   }

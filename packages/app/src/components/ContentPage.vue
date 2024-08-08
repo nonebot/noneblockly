@@ -15,7 +15,6 @@ import ButtonPanel from "@/components/ButtonPanel.vue";
         <template v-slot:tab-2>
           <CodeTab />
         </template>
-        <template v-slot:bottom> </template>
       </ContentCard>
     </v-container>
     <ButtonPanel />

@@ -12,24 +12,22 @@
       </v-tabs>
     </v-toolbar>
 
-    <v-window v-model="outputsStore.activeTab">
-      <perfect-scrollbar class="ps-content-card">
-        <v-window-item value="tab-1">
-          <v-card flat>
-            <v-card-text>
-              <slot name="tab-1" />
-            </v-card-text>
-          </v-card>
-        </v-window-item>
+    <v-window v-model="outputsStore.activeTab" class="content-card">
+      <v-window-item value="tab-1">
+        <v-card flat>
+          <v-card-text>
+            <slot name="tab-1" />
+          </v-card-text>
+        </v-card>
+      </v-window-item>
 
-        <v-window-item value="tab-2">
-          <v-card flat>
-            <v-card-text>
-              <slot name="tab-2" />
-            </v-card-text>
-          </v-card>
-        </v-window-item>
-      </perfect-scrollbar>
+      <v-window-item value="tab-2">
+        <v-card flat>
+          <v-card-text>
+            <slot name="tab-2" />
+          </v-card-text>
+        </v-card>
+      </v-window-item>
     </v-window>
   </v-card>
 </template>
@@ -41,7 +39,7 @@
   overflow: hidden;
 }
 
-.ps-content-card {
+.content-card {
   padding-bottom: 1.4rem;
   width: 100%;
   overflow: hidden;
