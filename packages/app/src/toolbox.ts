@@ -137,55 +137,166 @@ export const toolbox = {
         },
         {
           kind: "BLOCK",
-          type: "text_multiline",
-        },
-        {
-          kind: "BLOCK",
           type: "text_join",
         },
         {
           kind: "BLOCK",
           type: "text_append",
+          inputs: {
+            TEXT: {
+              shadow: {
+                type: "text",
+                fields: {
+                  TEXT: "",
+                },
+              },
+            },
+          },
         },
         {
           kind: "BLOCK",
           type: "text_length",
+          inputs: {
+            VALUE: {
+              shadow: {
+                type: "text",
+                fields: {
+                  TEXT: "abc",
+                },
+              },
+            },
+          },
         },
         {
           kind: "BLOCK",
           type: "text_isEmpty",
+          inputs: {
+            VALUE: {
+              shadow: {
+                type: "text",
+                fields: {
+                  TEXT: "",
+                },
+              },
+            },
+          },
         },
         {
           kind: "BLOCK",
           type: "text_indexOf",
+          inputs: {
+            VALUE: {
+              BLOCK: {
+                type: "variables_get",
+              },
+            },
+            FIND: {
+              shadow: {
+                type: "text",
+                fields: {
+                  TEXT: "abc",
+                },
+              },
+            },
+          },
         },
         {
           kind: "BLOCK",
           type: "text_charAt",
+          inputs: {
+            VALUE: {
+              BLOCK: {
+                type: "variables_get",
+              },
+            },
+          },
         },
         {
           kind: "BLOCK",
           type: "text_getSubstring",
+          inputs: {
+            STRING: {
+              BLOCK: {
+                type: "variables_get",
+              },
+            },
+          },
         },
         {
           kind: "BLOCK",
           type: "text_changeCase",
+          inputs: {
+            TEXT: {
+              shadow: {
+                type: "text",
+                fields: {
+                  TEXT: "abc",
+                },
+              },
+            },
+          },
         },
         {
           kind: "BLOCK",
           type: "text_trim",
+          inputs: {
+            TEXT: {
+              shadow: {
+                type: "text",
+                fields: {
+                  TEXT: "abc",
+                },
+              },
+            },
+          },
         },
         {
           kind: "BLOCK",
           type: "text_count",
+          inputs: {
+            SUB: {
+              shadow: {
+                type: "text",
+              },
+            },
+            TEXT: {
+              shadow: {
+                type: "text",
+              },
+            },
+          },
         },
         {
           kind: "BLOCK",
           type: "text_replace",
+          inputs: {
+            FROM: {
+              shadow: {
+                type: "text",
+              },
+            },
+            TO: {
+              shadow: {
+                type: "text",
+              },
+            },
+            TEXT: {
+              shadow: {
+                type: "text",
+              },
+            },
+          },
         },
         {
           kind: "BLOCK",
           type: "text_reverse",
+          inputs: {
+            TEXT: {
+              shadow: {
+                type: "text",
+              },
+            },
+          },
         },
       ],
       name: "文本",
@@ -241,6 +352,21 @@ export const toolbox = {
       ],
       name: "列表",
       categorystyle: "list_category",
+    },
+    {
+      kind: "CATEGORY",
+      contents: [
+        {
+          kind: "BLOCK",
+          type: "dicts_create_with",
+        },
+        {
+          kind: "BLOCK",
+          type: "dicts_get",
+        },
+      ],
+      name: "字典",
+      colour: "0",
     },
     {
       kind: "SEP",

@@ -1,10 +1,14 @@
 import * as Blockly from "blockly/core";
+import { BlockDefinition } from "blockly/core/blocks";
 
-// import "./python_dict.js";
-import { nonebotOnCommand } from "./nonebot_matcher";
+import { pythonDict } from "./python_dict";
+import { nonebotMatcher } from "./nonebot_matcher";
 // import "./nonebot_handle.js";
 // import "./nonebot_message.js";
 
-export const blocks = Blockly.common.createBlockDefinitionsFromJsonArray([
-  nonebotOnCommand,
-]);
+// Array of all block definitions
+let blockDefinitions: BlockDefinition[] = [];
+blockDefinitions = blockDefinitions.concat(pythonDict).concat(nonebotMatcher);
+
+export const blocks =
+  Blockly.common.createBlockDefinitionsFromJsonArray(blockDefinitions);
