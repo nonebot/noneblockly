@@ -27,7 +27,6 @@ export const toolbox = {
         {
           kind: "BLOCK",
           type: "logic_null",
-          disabled: "true",
         },
         {
           kind: "BLOCK",
@@ -364,6 +363,10 @@ export const toolbox = {
           kind: "BLOCK",
           type: "dicts_get",
         },
+        {
+          kind: "BLOCK",
+          type: "dicts_set",
+        },
       ],
       name: "字典",
       colour: "0",
@@ -376,19 +379,91 @@ export const toolbox = {
       contents: [
         {
           kind: "LABEL",
-          text: "需要填入“事件处理”类模块的“响应器”中",
+          text: "“消息处理”块会处理所有收到的消息",
+        },
+        {
+          kind: "BLOCK",
+          type: "nonebot_on_message",
         },
         {
           kind: "LABEL",
-          text: "也可以创建一个变量赋值，使用变量传递",
+          text: "“命令处理”块只处理以指定前缀和命令起始的消息",
         },
         {
           kind: "BLOCK",
           type: "nonebot_on_command",
         },
+        {
+          kind: "LABEL",
+          text: "以下参数或方法仅能在“消息处理”或“命令处理”语句中使用",
+        },
+        {
+          kind: "BLOCK",
+          type: "nonebot_param_text",
+        },
+        {
+          kind: "BLOCK",
+          type: "nonebot_send",
+        },
       ],
-      name: "事件响应器",
-      colour: "20",
+      name: "通用消息处理",
+      colour: "0",
+    },
+    {
+      kind: "CATEGORY",
+      contents: [
+        {
+          kind: "LABEL",
+          text: "“跨平台命令解析与处理”块提供更加灵活的跨平台命令解析支持",
+        },
+        {
+          kind: "BLOCK",
+          type: "nonebot_on_alconna",
+        },
+        {
+          kind: "LABEL",
+          text: "以下命令参数只能填充到“跨平台命令解析与处理”中对应位置",
+        },
+        {
+          kind: "BLOCK",
+          type: "alconna_const",
+        },
+        {
+          kind: "BLOCK",
+          type: "alconna_arg",
+        },
+        {
+          kind: "LABEL",
+          text: "以下参数或方法仅能在“跨平台命令解析与处理”语句中使用",
+        },
+      ],
+      name: "跨平台命令处理",
+      colour: "90",
+    },
+    {
+      kind: "CATEGORY",
+      contents: [
+        {
+          kind: "BLOCK",
+          type: "store_save_json",
+        },
+        {
+          kind: "BLOCK",
+          type: "store_load_json",
+        },
+      ],
+      name: "文件存储",
+      colour: "150",
+    },
+    {
+      kind: "CATEGORY",
+      name: "定时任务",
+      colour: "210",
+    },
+    {
+      kind: "CATEGORY",
+      name: "网络请求",
+      colour: "270",
     },
     {
       kind: "SEP",

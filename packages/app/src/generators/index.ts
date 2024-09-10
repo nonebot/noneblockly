@@ -1,4 +1,6 @@
-import { forBlock as pythonDictBlock } from "./python_dict";
-import { forBlock as nonebotMatcherBlock } from "./nonebot_matcher";
+import { forBlock as pythonDict } from "./python_dict";
+import { forBlock as nonebotBasic } from "./nonebot_basic";
+import { forBlock as nonebotAlconna } from "./nonebot_alconna";
+import { forBlock as nonebotStore } from "./nonebot_store";
 
-export const generators = [pythonDictBlock, nonebotMatcherBlock];
+export const generators = [pythonDict, nonebotBasic, nonebotAlconna, nonebotStore];

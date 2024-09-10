@@ -79,14 +79,42 @@ export const pythonDict: BlockDefinition[] = [
         check: "dict",
       },
       {
-        type: "input_value",
-        name: "ITEM",
+        type: "field_input",
+        name: "KEY",
+        text: "key",
       },
     ],
     output: null,
     inputsInline: true,
     tooltip: "",
     helpUrl: "",
+    colour: 0,
+    // style: "dict_blocks",
+  },
+  {
+    type: "dicts_set",
+    message0: "设置字典 %1 中 KEY %2 的值为 %3",
+    args0: [
+      {
+        type: "input_value",
+        name: "DICT",
+        check: "dict",
+      },
+      {
+        type: "field_input",
+        name: "KEY",
+        text: "key",
+      },
+      {
+        type: "input_value",
+        name: "VALUE",
+      },
+    ],
+    inputsInline: true,
+    tooltip: "",
+    helpUrl: "",
+    previousStatement: null,
+    nextStatement: null,
     colour: 0,
     // style: "dict_blocks",
   },
@@ -104,7 +132,12 @@ interface DictCreateWithMixin extends DictCreateWithMixinType {
 type DictCreateWithMixinType = typeof DICTS_CREATE_WITH;
 
 const DICTS_CREATE_WITH = {
+  /**
+   * Number of item inputs the block has.
+   * @type {number}
+   */
   itemCount_: 2,
+
   /**
    * Block for creating a dict with any number of key-value of any type.
    */
@@ -114,7 +147,7 @@ const DICTS_CREATE_WITH = {
    */
   mutationToDom: function (this: DictCreateWithBlock): Element {
     const container = Blockly.utils.xml.createElement("mutation");
-    container.setAttribute("items", `${this.itemCount_}`);
+    container.setAttribute("items", String(this.itemCount_));
     return container;
   },
   /**
@@ -175,9 +208,7 @@ const DICTS_CREATE_WITH = {
    * @param containerBlock Root block in mutator.
    */
   compose: function (this: DictCreateWithBlock, containerBlock: Block) {
-    let itemBlock: ItemBlock | null = containerBlock.getInputTargetBlock(
-      "STACK",
-    ) as ItemBlock;
+    let itemBlock: ItemBlock | null = containerBlock.getInputTargetBlock("STACK") as ItemBlock;
     // Count number of inputs.
     const connections: Connection[] = [];
     while (itemBlock) {
@@ -191,13 +222,11 @@ const DICTS_CREATE_WITH = {
     }
     // Disconnect any children that don't belong.
     for (let i = 0; i < this.itemCount_; i++) {
-      const connection_key = this.getInput("KEY" + i)!.connection!
-        .targetConnection;
+      const connection_key = this.getInput("KEY" + i)!.connection!.targetConnection;
       if (connection_key && connections.indexOf(connection_key) === -1) {
         connection_key.disconnect();
       }
-      const connection_value = this.getInput("VALUE" + i)!.connection!
-        .targetConnection;
+      const connection_value = this.getInput("VALUE" + i)!.connection!.targetConnection;
       if (connection_value && connections.indexOf(connection_value) === -1) {
         connection_value.disconnect();
       }
@@ -212,9 +241,7 @@ const DICTS_CREATE_WITH = {
   },
   saveConnections: function (this: DictCreateWithBlock, containerBlock: Block) {
     // Store a pointer to any connected child blocks.
-    let itemBlock: ItemBlock | null = containerBlock.getInputTargetBlock(
-      "STACK",
-    ) as ItemBlock;
+    let itemBlock: ItemBlock | null = containerBlock.getInputTargetBlock("STACK") as ItemBlock;
     let i = 0;
     while (itemBlock) {
       if (itemBlock.isInsertionMarker()) {
@@ -305,16 +332,10 @@ const DICTS_CREATE_WITH_EXTENSION = function (this: DictCreateWithBlock) {
   this.itemCount_ = 2;
   this.updateShape_();
   // Configure the mutator UI.
-  this.setMutator(
-    new Blockly.icons.MutatorIcon(["dicts_create_with_item"], this),
-  );
+  this.setMutator(new Blockly.icons.MutatorIcon(["dicts_create_with_item"], this));
 };
 
 if (Blockly.Extensions.isRegistered("dict_create_with_mutator")) {
   Blockly.Extensions.unregister("dict_create_with_mutator");
 }
-Blockly.Extensions.registerMutator(
-  "dict_create_with_mutator",
-  DICTS_CREATE_WITH,
-  DICTS_CREATE_WITH_EXTENSION,
-);
+Blockly.Extensions.registerMutator("dict_create_with_mutator", DICTS_CREATE_WITH, DICTS_CREATE_WITH_EXTENSION);
