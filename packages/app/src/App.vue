@@ -21,6 +21,10 @@ generators.forEach((generator) => {
   Object.assign(pythonGenerator.forBlock, generator);
 });
 
+pythonGenerator.addReservedWords(
+  "json,Annotated,Matcher,Message,EventMessage,CommandArg,on_command,on_message,on_alconna,to_me",
+);
+
 Blockly.setLocale(ZhHans);
 
 // Set store data

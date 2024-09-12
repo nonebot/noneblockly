@@ -4,6 +4,8 @@ import * as Blockly from "blockly";
 import { pythonGenerator } from "blockly/python";
 import { LightTheme, DarkTheme } from "@/theme";
 
+const version = "v1";
+
 export const WorkspaceStore = reactive({
   workspace: ref(),
   startBlocks: ref(),
@@ -65,30 +67,34 @@ export function setWorkspaceTheme(theme: string) {
 }
 
 export function saveJson() {
-  let workspace = Blockly.getMainWorkspace();
-  let state = Blockly.serialization.workspaces.save(workspace);
-  let json = JSON.stringify(state);
+  const workspace = Blockly.getMainWorkspace();
+  const data = Blockly.serialization.workspaces.save(workspace);
+  const json = JSON.stringify({ version: version, data: data });
   localStorage.setItem("NoneBlockly", json);
   OutputsStore.snackbarColor = "green";
   OutputsStore.snackbarMsg = "🤗 工作区已暂存";
   OutputsStore.snackbar = true;
-  // console.log("工作区已暂存：");
-  // console.log(json);
 }
 
 export function loadJson() {
-  let workspace = Blockly.getMainWorkspace();
-  let json = localStorage.getItem("NoneBlockly");
-  if (json) {
-    Blockly.serialization.workspaces.load(JSON.parse(json), workspace);
-    OutputsStore.snackbarColor = "green";
-    OutputsStore.snackbarMsg = "🥰 已恢复暂存工作区";
+  const workspace = Blockly.getMainWorkspace();
+  const savedData = localStorage.getItem("NoneBlockly");
+  if (savedData) {
+    const json = JSON.parse(savedData);
+    if (json.version === version) {
+      Blockly.serialization.workspaces.load(json.data, workspace);
+      OutputsStore.snackbarColor = "green";
+      OutputsStore.snackbarMsg = "🥰 已恢复暂存工作区";
+      OutputsStore.snackbar = true;
+    } else {
+      initWorkspaceState();
+    }
   } else {
     OutputsStore.snackbarColor = "warning";
     OutputsStore.snackbarMsg = "未找到暂存工作区，将导入默认工作区";
+    OutputsStore.snackbar = true;
     initWorkspaceState();
   }
-  OutputsStore.snackbar = true;
 }
 
 export function initWorkspaceState() {
@@ -100,15 +106,6 @@ export function initWorkspaceState() {
 export function generateCode() {
   let workspace = Blockly.getMainWorkspace();
   OutputsStore.code = pythonGenerator.workspaceToCode(workspace);
-  // outputsStore.activeTab = "tab-2";
-  // console.log("已生成代码：");
-  // console.log(outputsStore.code);
-}
-
-export function showCode() {
-  let workspace = Blockly.getMainWorkspace();
-  let code = pythonGenerator.workspaceToCode(workspace);
-  alert(code);
 }
 
 export function copyCode() {
