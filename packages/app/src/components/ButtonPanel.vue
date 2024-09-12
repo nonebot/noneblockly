@@ -2,11 +2,11 @@
 import { useTheme } from "vuetify";
 import {
   copyCode,
-  loadJSON,
-  saveJSON,
-  outputsStore,
+  loadJson,
+  saveJson,
+  OutputsStore,
   setWorkspaceTheme,
-} from "@/stores/workspaces";
+} from "@/workspace";
 
 const theme = useTheme();
 
@@ -38,25 +38,25 @@ function toggleTheme() {
 
       <v-snackbar
         location-strategy="static"
-        v-model="outputsStore.snackbar"
-        :timeout="outputsStore.snackbarTimeout"
-        :color="outputsStore.snackbarColor"
+        v-model="OutputsStore.snackbar"
+        :timeout="OutputsStore.snackbarTimeout"
+        :color="OutputsStore.snackbarColor"
         elevation="24"
       >
         <template v-slot:actions>
           <v-icon :icon="mdiContentSave"></v-icon>
         </template>
-        {{ outputsStore.snackbarMsg }}
+        {{ OutputsStore.snackbarMsg }}
       </v-snackbar>
 
-      <v-btn color="tertiary" @click="saveJSON">
+      <v-btn color="tertiary" @click="saveJson">
         <v-icon :icon="mdiContentSave"></v-icon>
         暂存
         <!-- SAVE -->
         <v-tooltip activator="parent" location="bottom"> 暂存工作区 </v-tooltip>
       </v-btn>
 
-      <v-btn color="tertiary" @click="loadJSON">
+      <v-btn color="tertiary" @click="loadJson">
         <v-icon :icon="mdiFileRestore"></v-icon>
         恢复
         <!-- RESTORE -->

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { initWorkspaceState } from "@/stores/workspaces";
+import { initWorkspaceState } from "@/workspace";
 </script>
 
 <template>

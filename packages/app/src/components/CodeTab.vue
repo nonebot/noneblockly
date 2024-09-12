@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { outputsStore } from "@/stores/workspaces";
+import { OutputsStore } from "@/workspace";
 </script>
 
 <template>
   <v-card-text class="content-code">
     <highlightjs
       class="overflow-auto"
-      :code="outputsStore.code"
+      :code="OutputsStore.code"
       language="python"
       word-wrap
     />

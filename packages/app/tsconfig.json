@@ -6,6 +6,7 @@
     "declarationMap": true,
     "module": "ES2015",
     "moduleResolution": "node",
+    "resolveJsonModule": true,
     "target": "ES2015",
     "strict": true,
     "paths": {

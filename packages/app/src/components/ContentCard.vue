@@ -6,13 +6,13 @@
     rounded="0"
   >
     <v-toolbar density="compact" color="secondary-container">
-      <v-tabs v-model="outputsStore.activeTab" bg-color="secondary-container">
+      <v-tabs v-model="OutputsStore.activeTab" bg-color="secondary-container">
         <v-tab value="tab-1">教程</v-tab>
         <v-tab value="tab-2">代码</v-tab>
       </v-tabs>
     </v-toolbar>
 
-    <v-window v-model="outputsStore.activeTab" class="content-card">
+    <v-window v-model="OutputsStore.activeTab" class="content-card">
       <v-window-item value="tab-1">
         <v-card flat>
           <v-card-text>
@@ -47,5 +47,5 @@
 </style>
 
 <script setup lang="ts">
-import { outputsStore } from "@/stores/workspaces";
+import { OutputsStore } from "@/workspace";
 </script>
