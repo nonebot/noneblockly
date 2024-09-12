@@ -47,7 +47,15 @@ function onClick_(plusField: Blockly.FieldImage) {
   const newExtraState = getExtraBlockState(block);
 
   if (oldExtraState != newExtraState) {
-    Blockly.Events.fire(new Blockly.Events.BlockChange(block, "mutation", null, oldExtraState, newExtraState));
+    Blockly.Events.fire(
+      new Blockly.Events.BlockChange(
+        block,
+        "mutation",
+        null,
+        oldExtraState,
+        newExtraState,
+      ),
+    );
   }
   Blockly.Events.setGroup(false);
 }

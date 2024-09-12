@@ -29,7 +29,8 @@ export const definitions: BlockDefinition[] = [
   },
   {
     type: "nonebot_on_command",
-    tooltip: "处理指定前缀（默认为'/'）与命令字符串起始的消息，处理块内的消息文本为命令参数",
+    tooltip:
+      "处理指定前缀（默认为'/'）与命令字符串起始的消息，处理块内的消息文本为命令参数",
     helpUrl: "",
     message0: "命令处理 %1 命令字符串 %2 仅与我相关 %3 %4 %5",
     args0: [

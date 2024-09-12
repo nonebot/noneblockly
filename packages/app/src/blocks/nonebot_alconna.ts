@@ -1,15 +1,17 @@
 import * as Blockly from "blockly/core";
 import type { BlockDefinition } from "blockly/core/blocks";
 import type { BlockSvg } from "blockly/core/block_svg";
-import { createPlusField } from "./components/field_plus";
-import { createMinusField } from "./components/field_minus";
+
+import { createPlusField } from "./fields/field_plus";
+import { createMinusField } from "./fields/field_minus";
 
 export const definitions: BlockDefinition[] = [
   {
     type: "nonebot_on_alconna",
     tooltip: "",
     helpUrl: "",
-    message0: "跨平台命令解析与处理 %1 命令字符串 %2 仅与我相关 %3 %4 无其他命令参数 %5 %6",
+    message0:
+      "跨平台命令解析与处理 %1 命令字符串 %2 仅与我相关 %3 %4 无其他命令参数 %5 %6",
     args0: [
       {
         type: "input_dummy",
@@ -88,6 +90,25 @@ export const definitions: BlockDefinition[] = [
       },
     ],
     output: "arg",
+    colour: 120,
+  },
+  {
+    type: "alconna_arg_get",
+    tooltip: "",
+    helpUrl: "",
+    message0: "获取参数 %1 %2",
+    args0: [
+      {
+        type: "field_dropdown",
+        name: "NAME",
+        options: [["-", ""]],
+      },
+      {
+        type: "input_dummy",
+        name: "PARAMS",
+      },
+    ],
+    output: null,
     colour: 120,
   },
 ];
@@ -196,7 +217,8 @@ const ALCONNA = {
    * @private
    */
   addPart_: function (this: AlconnaBlock) {
-    const connection = (this.getInput("HANDLE") as Blockly.Input).connection?.targetConnection;
+    const connection = (this.getInput("HANDLE") as Blockly.Input).connection
+      ?.targetConnection;
     this.removeInput("HANDLE");
     if (this.itemCount_ == 0) {
       this.removeInput("EMPTY");
@@ -230,7 +252,8 @@ const ALCONNA = {
         .appendField(createPlusField(), "PLUS")
         .setAlign(Blockly.inputs.Align.RIGHT)
         .appendField("无其他命令参数");
-      const connection = (this.getInput("HANDLE") as Blockly.Input).connection?.targetConnection;
+      const connection = (this.getInput("HANDLE") as Blockly.Input).connection
+        ?.targetConnection;
       this.removeInput("HANDLE");
       this.appendStatementInput("HANDLE");
       connection?.reconnect(this, "HANDLE");
@@ -264,4 +287,8 @@ const ALCONNA_EXTENSION = function (this: AlconnaBlock) {
 if (Blockly.Extensions.isRegistered("alconna_mutator")) {
   Blockly.Extensions.unregister("alconna_mutator");
 }
-Blockly.Extensions.registerMutator("alconna_mutator", ALCONNA, ALCONNA_EXTENSION);
+Blockly.Extensions.registerMutator(
+  "alconna_mutator",
+  ALCONNA,
+  ALCONNA_EXTENSION,
+);

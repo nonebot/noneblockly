@@ -5,7 +5,10 @@ import { DictCreateWithBlock } from "@/blocks/python_dict";
 
 export const forBlock = Object.create(null);
 
-forBlock["dicts_get"] = function (block: Blockly.Block, generator: Blockly.CodeGenerator) {
+forBlock["dicts_get"] = function (
+  block: Blockly.Block,
+  generator: Blockly.CodeGenerator,
+) {
   const dict = generator.valueToCode(block, "DICT", Order.MEMBER) || "{}";
   const key = block.getFieldValue("KEY");
   if (!key) {
@@ -15,7 +18,10 @@ forBlock["dicts_get"] = function (block: Blockly.Block, generator: Blockly.CodeG
   return [code, Order.ATOMIC];
 };
 
-forBlock["dicts_set"] = function (block: Blockly.Block, generator: Blockly.CodeGenerator) {
+forBlock["dicts_set"] = function (
+  block: Blockly.Block,
+  generator: Blockly.CodeGenerator,
+) {
   const dict = generator.valueToCode(block, "DICT", Order.MEMBER) || "{}";
   const key = block.getFieldValue("KEY");
   if (!key) {
@@ -26,12 +32,17 @@ forBlock["dicts_set"] = function (block: Blockly.Block, generator: Blockly.CodeG
   return code;
 };
 
-forBlock["dicts_create_with"] = function (block: DictCreateWithBlock, generator: Blockly.CodeGenerator) {
-  let items = new Array(block.itemCount_);
+forBlock["dicts_create_with"] = function (
+  block: DictCreateWithBlock,
+  generator: Blockly.CodeGenerator,
+) {
+  let items = new Array();
   for (let n = 0; n < block.itemCount_; n++) {
-    let key = generator.valueToCode(block, "KEY" + n, Order.NONE) || "None";
+    let key = generator.valueToCode(block, "KEY" + n, Order.NONE);
     let value = generator.valueToCode(block, "VALUE" + n, Order.NONE) || "None";
-    items[n] = key + ": " + value;
+    if (key) {
+      items.push(`${key}: ${value}`);
+    }
   }
   const code = "{" + items.join(", ") + "}";
   return [code, Order.ATOMIC];

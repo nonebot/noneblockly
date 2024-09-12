@@ -39,7 +39,9 @@
                             "block": {
                               "type": "variables_get",
                               "id": "[Ws*B$JWgLY]BeT`^_=]",
-                              "fields": { "VAR": { "id": "VSvr3AeHEP),5NB5v$+;" } }
+                              "fields": {
+                                "VAR": { "id": "VSvr3AeHEP),5NB5v$+;" }
+                              }
                             }
                           }
                         }
@@ -69,7 +71,9 @@
                                 "block": {
                                   "type": "variables_get",
                                   "id": "hF5`vj~{OC2uF+^}Q8yk",
-                                  "fields": { "VAR": { "id": "dS|cq^n0{Ep#B]f*RtAH" } }
+                                  "fields": {
+                                    "VAR": { "id": "dS|cq^n0{Ep#B]f*RtAH" }
+                                  }
                                 }
                               }
                             }
@@ -86,10 +90,17 @@
                               "block": {
                                 "type": "variables_get",
                                 "id": "7iF8)`YtA.s.-@v_dYNo",
-                                "fields": { "VAR": { "id": "VSvr3AeHEP),5NB5v$+;" } }
+                                "fields": {
+                                  "VAR": { "id": "VSvr3AeHEP),5NB5v$+;" }
+                                }
                               }
                             },
-                            "VALUE": { "block": { "type": "nonebot_param_text", "id": "{eYrM|C4so41hXY4~MtD" } }
+                            "VALUE": {
+                              "block": {
+                                "type": "nonebot_param_text",
+                                "id": "{eYrM|C4so41hXY4~MtD"
+                              }
+                            }
                           },
                           "next": {
                             "block": {
@@ -101,7 +112,9 @@
                                   "block": {
                                     "type": "variables_get",
                                     "id": "Z8a4Wo4ae#)plFG}S:6B",
-                                    "fields": { "VAR": { "id": "VSvr3AeHEP),5NB5v$+;" } }
+                                    "fields": {
+                                      "VAR": { "id": "VSvr3AeHEP),5NB5v$+;" }
+                                    }
                                   }
                                 }
                               }
@@ -135,8 +148,19 @@
                     "id": "3KiI-ePNeWs/tZ.xUQd*",
                     "fields": { "OP": "EQ" },
                     "inputs": {
-                      "A": { "block": { "type": "nonebot_param_text", "id": "}:vuF-QZzN6NL{}`jW87" } },
-                      "B": { "block": { "type": "text", "id": ":R-~fjy%Xs,HExpeH$jd", "fields": { "TEXT": "ping" } } }
+                      "A": {
+                        "block": {
+                          "type": "nonebot_param_text",
+                          "id": "}:vuF-QZzN6NL{}`jW87"
+                        }
+                      },
+                      "B": {
+                        "block": {
+                          "type": "text",
+                          "id": ":R-~fjy%Xs,HExpeH$jd",
+                          "fields": { "TEXT": "ping" }
+                        }
+                      }
                     }
                   }
                 },
@@ -147,7 +171,11 @@
                     "fields": { "FINISH": true },
                     "inputs": {
                       "MESSAGE": {
-                        "block": { "type": "text", "id": "NpK-srq00|eB:+v#I5t?", "fields": { "TEXT": "pong" } }
+                        "block": {
+                          "type": "text",
+                          "id": "NpK-srq00|eB:+v#I5t?",
+                          "fields": { "TEXT": "pong" }
+                        }
                       }
                     }
                   }

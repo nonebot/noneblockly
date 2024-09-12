@@ -436,6 +436,10 @@ export const toolbox = {
           kind: "LABEL",
           text: "以下参数或方法仅能在“跨平台命令解析与处理”语句中使用",
         },
+        {
+          kind: "BLOCK",
+          type: "alconna_arg_get",
+        },
       ],
       name: "跨平台命令处理",
       colour: "90",
@@ -462,6 +466,16 @@ export const toolbox = {
     },
     {
       kind: "CATEGORY",
+      contents: [
+        {
+          kind: "BLOCK",
+          type: "request_get",
+        },
+        {
+          kind: "BLOCK",
+          type: "request_post",
+        },
+      ],
       name: "网络请求",
       colour: "270",
     },

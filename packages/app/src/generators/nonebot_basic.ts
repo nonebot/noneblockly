@@ -3,19 +3,29 @@ import * as Blockly from "blockly/core";
 
 export const forBlock = Object.create(null);
 
-forBlock["nonebot_on_message"] = function (block: Blockly.Block, generator: PythonGenerator) {
+forBlock["nonebot_on_message"] = function (
+  block: Blockly.Block,
+  generator: PythonGenerator,
+) {
   const checkbox_tome = block.getFieldValue("TOME") === "TRUE";
-  const statements_handle = generator.statementToCode(block, "HANDLE") || generator.PASS;
-  generator["definitions_"]["from typing import Annotated"] = "from typing import Annotated";
+  const statements_handle =
+    generator.statementToCode(block, "HANDLE") || generator.PASS;
+  generator["definitions_"]["from typing import Annotated"] =
+    "from typing import Annotated";
   // generator["definitions_"]["from nonebot.adapters import Bot"] = "from nonebot.adapters import Bot";
   // generator["definitions_"]["from nonebot.adapters import Event"] = "from nonebot.adapters import Event";
-  generator["definitions_"]["from nonebot.matcher import Matcher"] = "from nonebot.matcher import Matcher";
-  generator["definitions_"]["from nonebot.adapters import Message"] = "from nonebot.adapters import Message";
-  generator["definitions_"]["from nonebot.params import EventMessage"] = "from nonebot.params import EventMessage";
-  generator["definitions_"]["from nonebot.plugin import on_message"] = "from nonebot.plugin import on_message";
+  generator["definitions_"]["from nonebot.matcher import Matcher"] =
+    "from nonebot.matcher import Matcher";
+  generator["definitions_"]["from nonebot.adapters import Message"] =
+    "from nonebot.adapters import Message";
+  generator["definitions_"]["from nonebot.params import EventMessage"] =
+    "from nonebot.params import EventMessage";
+  generator["definitions_"]["from nonebot.plugin import on_message"] =
+    "from nonebot.plugin import on_message";
   let tome_statement = "";
   if (checkbox_tome) {
-    generator["definitions_"]["from nonebot.rule import to_me"] = "from nonebot.rule import to_me";
+    generator["definitions_"]["from nonebot.rule import to_me"] =
+      "from nonebot.rule import to_me";
     tome_statement = "rule=to_me()";
   }
   let code = `@on_message(${tome_statement}).handle()\n`;
@@ -26,20 +36,30 @@ forBlock["nonebot_on_message"] = function (block: Blockly.Block, generator: Pyth
   return code;
 };
 
-forBlock["nonebot_on_command"] = function (block: Blockly.Block, generator: PythonGenerator) {
+forBlock["nonebot_on_command"] = function (
+  block: Blockly.Block,
+  generator: PythonGenerator,
+) {
   const text_command = block.getFieldValue("COMMAND");
   const checkbox_tome = block.getFieldValue("TOME") === "TRUE";
-  const statements_handle = generator.statementToCode(block, "HANDLE") || generator.PASS;
-  generator["definitions_"]["from typing import Annotated"] = "from typing import Annotated";
+  const statements_handle =
+    generator.statementToCode(block, "HANDLE") || generator.PASS;
+  generator["definitions_"]["from typing import Annotated"] =
+    "from typing import Annotated";
   // generator["definitions_"]["from nonebot.adapters import Bot"] = "from nonebot.adapters import Bot";
   // generator["definitions_"]["from nonebot.adapters import Event"] = "from nonebot.adapters import Event";
-  generator["definitions_"]["from nonebot.matcher import Matcher"] = "from nonebot.matcher import Matcher";
-  generator["definitions_"]["from nonebot.adapters import Message"] = "from nonebot.adapters import Message";
-  generator["definitions_"]["from nonebot.params import CommandArg"] = "from nonebot.params import CommandArg";
-  generator["definitions_"]["from nonebot.plugin import on_command"] = "from nonebot.plugin import on_command";
+  generator["definitions_"]["from nonebot.matcher import Matcher"] =
+    "from nonebot.matcher import Matcher";
+  generator["definitions_"]["from nonebot.adapters import Message"] =
+    "from nonebot.adapters import Message";
+  generator["definitions_"]["from nonebot.params import CommandArg"] =
+    "from nonebot.params import CommandArg";
+  generator["definitions_"]["from nonebot.plugin import on_command"] =
+    "from nonebot.plugin import on_command";
   let tome_statement = "";
   if (checkbox_tome) {
-    generator["definitions_"]["from nonebot.rule import to_me"] = "from nonebot.rule import to_me";
+    generator["definitions_"]["from nonebot.rule import to_me"] =
+      "from nonebot.rule import to_me";
     tome_statement = ", rule=to_me()";
   }
   let code = `@on_command("${text_command}"${tome_statement}).handle()\n`;
@@ -55,7 +75,10 @@ forBlock["nonebot_param_text"] = function () {
   return [code, Order.NONE];
 };
 
-forBlock["nonebot_send"] = function (block: Blockly.Block, generator: PythonGenerator) {
+forBlock["nonebot_send"] = function (
+  block: Blockly.Block,
+  generator: PythonGenerator,
+) {
   const message = generator.valueToCode(block, "MESSAGE", Order.ATOMIC);
   const checkbox_tome = block.getFieldValue("FINISH") === "TRUE";
   if (checkbox_tome) {
