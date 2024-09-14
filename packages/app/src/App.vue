@@ -1,15 +1,18 @@
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { onMounted, shallowRef } from "vue";
 // Components
-import * as Blockly from "blockly";
-import BlocklyPage from "@/components/BlocklyPage.vue";
-import ContentPage from "@/components/ContentPage.vue";
+import ContentCard from "@/components/ContentCard.vue";
+import BlocklyTab from "@/components/BlocklyTab.vue";
+import TutorialTab from "@/components/TutorialTab.vue";
+import CodeTab from "@/components/CodeTab.vue";
+import ButtonPanel from "@/components/ButtonPanel.vue";
 // Workspace
-import { OptionsStore, WorkspaceStore } from "@/workspace";
 import { loadJson, generateCode } from "@/workspace";
+import { OptionsStore, WorkspaceStore } from "@/workspace";
 // Workspace data
 import { StartBlocks } from "@/default";
 // Blockly config
+import * as Blockly from "blockly";
 import { blocks } from "@/blocks";
 import { toolbox } from "@/toolbox";
 import { generators } from "@/generators";
@@ -35,66 +38,39 @@ WorkspaceStore.workspace = workspace;
 
 onMounted(() => {
   loadJson();
-
-  var workspace = Blockly.getMainWorkspace();
+  const workspace = Blockly.getMainWorkspace();
   workspace.addChangeListener(generateCode);
 });
 </script>
 
 <template>
   <v-app>
-    <BlocklyPage id="blockly-div" :options="OptionsStore" ref="workspace" />
-    <ContentPage id="content" />
+    <v-card class="rounded-0">
+      <div class="pa-0 ma-0">
+        <ContentCard>
+          <template v-slot:tab-0>
+            <BlocklyTab
+              id="blockly-div"
+              :options="OptionsStore"
+              ref="workspace"
+            />
+          </template>
+          <template v-slot:tab-1>
+            <TutorialTab />
+          </template>
+          <template v-slot:tab-2>
+            <CodeTab />
+          </template>
+        </ContentCard>
+        <ButtonPanel />
+      </div>
+    </v-card>
   </v-app>
 </template>
 
 <style lang="scss" scoped>
 @import url("https://fonts.googleapis.com/css?family=Open+Sans");
 @import url("https://fonts.googleapis.com/css?family=Inter");
-
-html {
-  overflow-y: auto;
-}
-
-body {
-  margin: 0;
-}
-
-#blockly-div {
-  position: absolute;
-}
-
-#content {
-  position: absolute;
-}
-
-@media (min-width: 768px) {
-  #blockly-div {
-    left: 0;
-    width: 60%;
-    height: 100%;
-  }
-
-  #content {
-    right: 0;
-    width: 40%;
-    height: 100%;
-  }
-}
-
-@media (max-width: 767px) {
-  #blockly-div {
-    top: 0;
-    width: 100%;
-    height: 45%;
-  }
-
-  #content {
-    bottom: 0;
-    width: 100%;
-    height: 55%;
-  }
-}
 </style>
 
 <script lang="ts">

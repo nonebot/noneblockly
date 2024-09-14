@@ -33,9 +33,6 @@ function toggleTheme() {
       density="default"
       color="primary-container"
     >
-      <v-spacer />
-      <v-spacer />
-
       <v-snackbar
         location-strategy="static"
         v-model="OutputsStore.snackbar"
@@ -103,9 +100,8 @@ function toggleTheme() {
 
 <style scoped>
 #content-card-toolbar {
-  position: absolute;
-  right: 0;
   bottom: 0;
+  height: 8vh;
   width: 100%;
 }
 </style>

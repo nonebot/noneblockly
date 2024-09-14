@@ -46,7 +46,7 @@ export const OptionsStore = reactive({
 
 export const OutputsStore = reactive({
   code: "" as string,
-  activeTab: ref("tab-1"),
+  activeTab: ref("tab-0"),
   snackbar: false,
   snackbarMsg: "" as string,
   snackbarTimeout: 2500 as number,

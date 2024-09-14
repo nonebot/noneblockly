@@ -7,14 +7,23 @@
   >
     <v-toolbar density="compact" color="secondary-container">
       <v-tabs v-model="OutputsStore.activeTab" bg-color="secondary-container">
+        <v-tab value="tab-0"> 编程 </v-tab>
         <v-tab value="tab-1"> 教程 </v-tab>
         <v-tab value="tab-2"> 代码 </v-tab>
       </v-tabs>
     </v-toolbar>
 
     <v-window v-model="OutputsStore.activeTab" class="content-card">
+      <v-window-item value="tab-0">
+        <v-card>
+          <div class="content-tab">
+            <slot name="tab-0" />
+          </div>
+        </v-card>
+      </v-window-item>
+
       <v-window-item value="tab-1">
-        <v-card flat>
+        <v-card>
           <div class="content-tab">
             <slot name="tab-1" />
           </div>
@@ -22,7 +31,7 @@
       </v-window-item>
 
       <v-window-item value="tab-2">
-        <v-card flat>
+        <v-card>
           <div class="content-tab">
             <slot name="tab-2" />
           </div>
@@ -33,29 +42,11 @@
 </template>
 
 <style lang="scss" scoped>
-#content-card-component {
-  height: 100%;
+.content-tab {
+  height: 84vh;
   width: 100%;
-}
-
-.content-card {
-  padding-bottom: 1.4rem;
-}
-
-@media (min-width: 768px) {
-  .content-tab {
-    padding: 1rem;
-    max-height: 86vh;
-    overflow: auto;
-  }
-}
-
-@media (max-width: 767px) {
-  .content-tab {
-    padding: 1rem;
-    max-height: 42vh;
-    overflow: auto;
-  }
+  padding: 1rem;
+  overflow: auto;
 }
 </style>
 

@@ -31,7 +31,7 @@ onMounted(() => {
 
 <template>
   <div>
-    <div class="blocklyDiv" ref="blocklyDiv"></div>
+    <div class="blockly-div" ref="blocklyDiv"></div>
     <xml ref="blocklyToolbox">
       <slot></slot>
     </xml>
@@ -39,8 +39,8 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.blocklyDiv {
-  height: 100%;
+.blockly-div {
+  height: 80vh;
   width: 100%;
   text-align: left;
 }
