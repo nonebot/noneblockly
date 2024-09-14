@@ -488,11 +488,11 @@ export const toolbox = {
       categorystyle: "variable_category",
       custom: "VARIABLE",
     },
-    {
-      kind: "CATEGORY",
-      name: "函数",
-      categorystyle: "procedure_category",
-      custom: "PROCEDURE",
-    },
+    // {
+    //   kind: "CATEGORY",
+    //   name: "函数",
+    //   categorystyle: "procedure_category",
+    //   custom: "PROCEDURE",
+    // },
   ],
 };
