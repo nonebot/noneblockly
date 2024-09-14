@@ -461,6 +461,32 @@ export const toolbox = {
     },
     {
       kind: "CATEGORY",
+      contents: [
+        {
+          kind: "BLOCK",
+          type: "scheduler_add",
+        },
+        {
+          kind: "BLOCK",
+          type: "scheduler_remove",
+        },
+        {
+          kind: "LABEL",
+          text: "请将以下时间配置块填入定时任务创建语句中使用",
+        },
+        {
+          kind: "BLOCK",
+          type: "scheduler_time_interval",
+        },
+        {
+          kind: "BLOCK",
+          type: "scheduler_time_cron_daily",
+        },
+        {
+          kind: "BLOCK",
+          type: "scheduler_time_cron",
+        },
+      ],
       name: "定时任务",
       colour: "210",
     },

@@ -12,7 +12,7 @@ forBlock["nonebot_on_alconna"] = function (
 ) {
   const command = block.getFieldValue("COMMAND");
   const checkbox_tome = block.getFieldValue("TOME") === "TRUE";
-  const statements_handle =
+  const statement_handle =
     generator.statementToCode(block, "HANDLE") || generator.PASS;
   // generator["definitions_"]["from nonebot.adapters import Bot"] = "from nonebot.adapters import Bot";
   // generator["definitions_"]["from nonebot.adapters import Event"] = "from nonebot.adapters import Event";
@@ -50,14 +50,14 @@ forBlock["nonebot_on_alconna"] = function (
   let code = `@on_alconna("${command}${args_matcher}"${tome_statement}).handle()\n`;
   // code += `async def _(matcher: Matcher, bot: Bot, event: Event, message: Annotated[Message, CommandArg()]):\n`;
   code += `async def _(matcher: Matcher${args_function}):\n`;
-  code += statements_handle;
+  code += statement_handle;
   code += "\n";
   return code;
 };
 
 forBlock["alconna_const"] = function (
   block: Blockly.Block,
-  generator: PythonGenerator,
+  _: PythonGenerator,
 ) {
   const text = block.getFieldValue("TEXT");
   return [text, Order.ATOMIC];
