@@ -5,9 +5,8 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build",
-    "preview": "vite preview",
-    "start": "vite preview"
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "keywords": [
     "blockly"
@@ -18,6 +17,7 @@
     "@blockly/theme-dark": "^7.0.1",
     "@highlightjs/vue-plugin": "^2.1.0",
     "@mdi/js": "^7.4.47",
+    "@types/file-saver": "^2.0.7",
     "@vitejs/plugin-vue": "^5.0.5",
     "typescript": "^5.5.2",
     "vite": "^5.3.1",
@@ -27,7 +27,9 @@
   },
   "dependencies": {
     "blockly": "^11.1.1",
+    "file-saver": "^2.0.5",
     "highlight.js": "^11.9.0",
+    "jszip": "^3.10.1",
     "sass": "^1.77.6",
     "vue": "^3.4.29",
     "vuetify": "^3.6.10"

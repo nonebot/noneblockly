@@ -4,6 +4,9 @@ import * as Blockly from "blockly";
 import { pythonGenerator } from "blockly/python";
 import { themeLight, themeDark } from "@/theme";
 
+import JSZip from "jszip";
+import { saveAs } from "file-saver";
+
 const version = "v1";
 
 export const workspaceStore = reactive({
@@ -108,18 +111,15 @@ export function generateCode() {
   outputsStore.code = pythonGenerator.workspaceToCode(workspace);
 }
 
-export function copyCode() {
+export function exportZip() {
   let workspace = Blockly.getMainWorkspace();
+  let zip = new JSZip();
   let code = pythonGenerator.workspaceToCode(workspace);
-  navigator.clipboard
-    .writeText(code)
-    .then(() => {
-      outputsStore.snackbarColor = "green";
-      outputsStore.snackbarMsg = "😎 已复制 Python 代码";
-    })
-    .catch((err) => {
-      outputsStore.snackbarColor = "warning";
-      outputsStore.snackbarMsg = "🥺 复制代码出错" + err;
-    });
+  zip.file("plugins/plugin_example.py", code);
+  outputsStore.snackbarColor = "green";
+  outputsStore.snackbarMsg = "😎 已导出 Python 项目";
   outputsStore.snackbar = true;
+  zip.generateAsync({ type: "blob" }).then(function (content) {
+    saveAs(content, "noneblockly.zip");
+  });
 }

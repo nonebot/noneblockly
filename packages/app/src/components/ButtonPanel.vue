@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useTheme } from "vuetify";
 import {
-  copyCode,
+  exportZip,
   loadJson,
   saveJson,
   outputsStore,
@@ -80,12 +80,12 @@ function toggleTheme() {
         </v-tooltip>
       </v-btn>
 
-      <v-btn color="tertiary" @click="copyCode">
+      <v-btn color="tertiary" @click="exportZip">
         <v-icon :icon="mdiLanguagePython"></v-icon>
-        复制代码
+        导出项目
         <!-- RESTORE -->
         <v-tooltip activator="parent" location="bottom">
-          复制导出的 Python 代码
+          导出 NoneBot 项目
         </v-tooltip>
       </v-btn>
 

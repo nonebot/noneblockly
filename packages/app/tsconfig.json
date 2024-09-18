@@ -9,6 +9,8 @@
     "resolveJsonModule": true,
     "target": "ES2015",
     "strict": true,
+    // avoid jszip error
+    "allowSyntheticDefaultImports": true,
     "paths": {
       "@/*": ["./src/*"]
     }

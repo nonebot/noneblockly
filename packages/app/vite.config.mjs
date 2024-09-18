@@ -16,11 +16,11 @@ export default defineConfig({
   //   noExternal: ["@blockly/blockly-component"],
   // },
   build: {
-    chunkSizeWarningLimit: 550,
+    chunkSizeWarningLimit: 700,
     rollupOptions: {
       output: {
         manualChunks: {
-          "blockly/blockly": ["blockly/blockly"],
+          "blockly/blockly": ["blockly"],
           "vuetify/vuetify": ["vuetify"],
         },
       },
@@ -41,7 +41,6 @@ export default defineConfig({
               "sep",
               "shadow",
             ].includes(tag),
-          whitespace: "preserve",
         },
       },
     }),
