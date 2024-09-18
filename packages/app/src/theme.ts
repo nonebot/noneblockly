@@ -8,12 +8,12 @@ import * as Blockly from "blockly/core";
 // @ts-ignore
 import ThemeDark from "@blockly/theme-dark";
 
-export const LightTheme = Blockly.Theme.defineTheme("light", {
+export const themeLight = Blockly.Theme.defineTheme("light", {
   base: Blockly.Themes.Classic,
   name: "Light",
 });
 
-export const DarkTheme = Blockly.Theme.defineTheme("dark", {
+export const themeDark = Blockly.Theme.defineTheme("dark", {
   base: ThemeDark,
   name: "Dark",
 });

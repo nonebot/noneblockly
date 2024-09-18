@@ -1,4 +1,4 @@
-export const StartBlocks = {
+export const startBlocks = {
   blocks: {
     languageVersion: 0,
     blocks: [

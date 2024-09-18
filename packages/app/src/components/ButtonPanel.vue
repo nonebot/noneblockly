@@ -4,7 +4,7 @@ import {
   copyCode,
   loadJson,
   saveJson,
-  OutputsStore,
+  outputsStore,
   setWorkspaceTheme,
 } from "@/workspace";
 
@@ -35,15 +35,15 @@ function toggleTheme() {
     >
       <v-snackbar
         location-strategy="static"
-        v-model="OutputsStore.snackbar"
-        :timeout="OutputsStore.snackbarTimeout"
-        :color="OutputsStore.snackbarColor"
+        v-model="outputsStore.snackbar"
+        :timeout="outputsStore.snackbarTimeout"
+        :color="outputsStore.snackbarColor"
         elevation="24"
       >
         <template v-slot:actions>
           <v-icon :icon="mdiContentSave"></v-icon>
         </template>
-        {{ OutputsStore.snackbarMsg }}
+        {{ outputsStore.snackbarMsg }}
       </v-snackbar>
 
       <v-btn color="tertiary" @click="saveJson">

@@ -8,9 +8,9 @@ import CodeTab from "@/components/CodeTab.vue";
 import ButtonPanel from "@/components/ButtonPanel.vue";
 // Workspace
 import { loadJson, generateCode } from "@/workspace";
-import { OptionsStore, WorkspaceStore } from "@/workspace";
+import { optionsStore, workspaceStore } from "@/workspace";
 // Workspace data
-import { StartBlocks } from "@/default";
+import { startBlocks } from "@/default";
 // Blockly config
 import * as Blockly from "blockly";
 import { blocks } from "@/blocks";
@@ -31,10 +31,10 @@ pythonGenerator.addReservedWords(
 Blockly.setLocale(ZhHans);
 
 // Set store data
-OptionsStore.toolbox = toolbox;
-WorkspaceStore.startBlocks = StartBlocks;
+optionsStore.toolbox = toolbox;
+workspaceStore.startBlocks = startBlocks;
 const workspace = Blockly.getMainWorkspace();
-WorkspaceStore.workspace = workspace;
+workspaceStore.workspace = workspace;
 
 onMounted(() => {
   loadJson();
@@ -51,7 +51,7 @@ onMounted(() => {
           <template v-slot:tab-0>
             <BlocklyTab
               id="blockly-div"
-              :options="OptionsStore"
+              :options="optionsStore"
               ref="workspace"
             />
           </template>

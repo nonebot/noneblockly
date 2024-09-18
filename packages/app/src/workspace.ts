@@ -2,16 +2,16 @@
 import { reactive, ref } from "vue";
 import * as Blockly from "blockly";
 import { pythonGenerator } from "blockly/python";
-import { LightTheme, DarkTheme } from "@/theme";
+import { themeLight, themeDark } from "@/theme";
 
 const version = "v1";
 
-export const WorkspaceStore = reactive({
+export const workspaceStore = reactive({
   workspace: ref(),
   startBlocks: ref(),
 });
 
-export const OptionsStore = reactive({
+export const optionsStore = reactive({
   toolbox: ref(),
   theme: ref(),
   collapse: false,
@@ -44,7 +44,7 @@ export const OptionsStore = reactive({
   renderer: "geras",
 });
 
-export const OutputsStore = reactive({
+export const outputsStore = reactive({
   code: "" as string,
   activeTab: ref("tab-0"),
   snackbar: false,
@@ -56,13 +56,13 @@ export const OutputsStore = reactive({
 export function setWorkspaceTheme(theme: string) {
   let workspace = Blockly.getMainWorkspace();
   if (theme === "LightTheme") {
-    OptionsStore.theme = ref(LightTheme);
+    optionsStore.theme = ref(themeLight);
     // @ts-ignore
-    workspace.setTheme(LightTheme);
+    workspace.setTheme(themeLight);
   } else if (theme === "DarkTheme") {
-    OptionsStore.theme = ref(DarkTheme);
+    optionsStore.theme = ref(themeDark);
     // @ts-ignore
-    workspace.setTheme(DarkTheme);
+    workspace.setTheme(themeDark);
   }
 }
 
@@ -71,9 +71,9 @@ export function saveJson() {
   const data = Blockly.serialization.workspaces.save(workspace);
   const json = JSON.stringify({ version: version, data: data });
   localStorage.setItem("NoneBlockly", json);
-  OutputsStore.snackbarColor = "green";
-  OutputsStore.snackbarMsg = "🤗 工作区已暂存";
-  OutputsStore.snackbar = true;
+  outputsStore.snackbarColor = "green";
+  outputsStore.snackbarMsg = "🤗 工作区已暂存";
+  outputsStore.snackbar = true;
 }
 
 export function loadJson() {
@@ -83,29 +83,29 @@ export function loadJson() {
     const json = JSON.parse(savedData);
     if (json.version === version) {
       Blockly.serialization.workspaces.load(json.data, workspace);
-      OutputsStore.snackbarColor = "green";
-      OutputsStore.snackbarMsg = "🥰 已恢复暂存工作区";
-      OutputsStore.snackbar = true;
+      outputsStore.snackbarColor = "green";
+      outputsStore.snackbarMsg = "🥰 已恢复暂存工作区";
+      outputsStore.snackbar = true;
     } else {
       initWorkspaceState();
     }
   } else {
-    OutputsStore.snackbarColor = "warning";
-    OutputsStore.snackbarMsg = "未找到暂存工作区，将导入默认工作区";
-    OutputsStore.snackbar = true;
+    outputsStore.snackbarColor = "warning";
+    outputsStore.snackbarMsg = "未找到暂存工作区，将导入默认工作区";
+    outputsStore.snackbar = true;
     initWorkspaceState();
   }
 }
 
 export function initWorkspaceState() {
-  let startBlocks = WorkspaceStore.startBlocks;
+  let startBlocks = workspaceStore.startBlocks;
   let workspace = Blockly.getMainWorkspace();
   Blockly.serialization.workspaces.load(startBlocks, workspace);
 }
 
 export function generateCode() {
   let workspace = Blockly.getMainWorkspace();
-  OutputsStore.code = pythonGenerator.workspaceToCode(workspace);
+  outputsStore.code = pythonGenerator.workspaceToCode(workspace);
 }
 
 export function copyCode() {
@@ -114,12 +114,12 @@ export function copyCode() {
   navigator.clipboard
     .writeText(code)
     .then(() => {
-      OutputsStore.snackbarColor = "green";
-      OutputsStore.snackbarMsg = "😎 已复制 Python 代码";
+      outputsStore.snackbarColor = "green";
+      outputsStore.snackbarMsg = "😎 已复制 Python 代码";
     })
     .catch((err) => {
-      OutputsStore.snackbarColor = "warning";
-      OutputsStore.snackbarMsg = "🥺 复制代码出错" + err;
+      outputsStore.snackbarColor = "warning";
+      outputsStore.snackbarMsg = "🥺 复制代码出错" + err;
     });
-  OutputsStore.snackbar = true;
+  outputsStore.snackbar = true;
 }
