@@ -110,6 +110,7 @@ export const definitions: BlockDefinition[] = [
     ],
     output: null,
     colour: 120,
+    mutator: "alconna_arg_get_mutator",
   },
 ];
 
@@ -275,6 +276,39 @@ const ALCONNA = {
 };
 
 /**
+ * Type of a 'nonebot_on_alconna' block.
+ *
+ * @internal
+ */
+export type AlconnaArgGetBlock = BlockSvg & AlconnaArgGetMixin;
+interface AlconnaArgGetMixin extends AlconnaArgGetMixinType {
+  name_: string;
+  isInitialized_: boolean;
+}
+type AlconnaArgGetMixinType = typeof ALCONNA_ARG_GET;
+
+const ALCONNA_ARG_GET = {
+  name_: "",
+  isInitialized_: false,
+
+  /**
+   * Returns the state of this block as a JSON serializable object.
+   */
+  saveExtraState: function (this: AlconnaArgGetBlock): { name: string } {
+    return { name: this.name_ };
+  },
+
+  /**
+   * Applies the given state to this block.
+   * @param {*} state The state to apply to this block, ie the item count.
+   */
+  loadExtraState: function (this: AlconnaArgGetBlock, state: any) {
+    const name = state["name"];
+    this.name_ = name;
+  },
+};
+
+/**
  * Updates the shape of the block to have 0 inputs if no mutation is provided.
  * @this {Blockly.Block}
  */
@@ -292,3 +326,8 @@ Blockly.Extensions.registerMutator(
   ALCONNA,
   ALCONNA_EXTENSION,
 );
+
+if (Blockly.Extensions.isRegistered("alconna_arg_get_mutator")) {
+  Blockly.Extensions.unregister("alconna_arg_get_mutator");
+}
+Blockly.Extensions.registerMutator("alconna_arg_get_mutator", ALCONNA_ARG_GET);

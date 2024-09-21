@@ -1,7 +1,7 @@
 import { PythonGenerator, Order } from "blockly/python";
 import * as Blockly from "blockly/core";
 
-import { AlconnaBlock } from "@/blocks/nonebot_alconna";
+import { AlconnaBlock, AlconnaArgGetBlock } from "@/blocks/nonebot_alconna";
 import { getAlconnaArg } from "@/blocks/fields/alconna_helper";
 
 export const forBlock = Object.create(null);
@@ -76,12 +76,35 @@ forBlock["alconna_arg"] = function (
 };
 
 forBlock["alconna_arg_get"] = function (
-  block: Blockly.Block,
+  block: AlconnaArgGetBlock,
   generator: PythonGenerator,
 ) {
   // This generator will also update the dropdown list
-  const name = block.getFieldValue("NAME");
+  let name_real = block.getFieldValue("NAME");
   const args = getAlconnaArg(block);
+  let options = new Array();
+  if (!block.isInitialized_ && block.name_ !== "") {
+    // Read from saved
+    name_real = block.name_;
+    block.isInitialized_ = true;
+    if (args.indexOf(name_real) !== -1) {
+      options.push([name_real, name_real]);
+    }
+    args.forEach((arg) => {
+      if (arg !== name_real) {
+        options.push([arg, arg]);
+      }
+    });
+    this.removeInput("PARAMS");
+    this.setWarningText("");
+    this.appendDummyInput("PARAMS")
+      ?.appendField("获取参数")
+      .appendField(new Blockly.FieldDropdown(options), "NAME");
+  } else {
+    args.forEach((arg) => {
+      options.push([arg, arg]);
+    });
+  }
   if (args.length === 0) {
     this.removeInput("PARAMS");
     this.setWarningText("请放置在“跨平台命令处理”中使用");
@@ -90,24 +113,15 @@ forBlock["alconna_arg_get"] = function (
       .appendField(new Blockly.FieldDropdown([["-", ""]]), "NAME");
     return ["", Order.ATOMIC];
   }
-  if (!args.find((arg) => arg === name)) {
+  if (!args.find((arg) => arg === name_real)) {
     this.removeInput("PARAMS");
-    this.setWarningText();
+    this.setWarningText("");
     this.appendDummyInput("PARAMS")
       ?.appendField("获取参数")
-      .appendField(
-        new Blockly.FieldDropdown(function () {
-          let options: [string, string][] = [];
-          args.forEach((arg) => {
-            options.push([arg, arg]);
-          });
-          return options;
-        }),
-        "NAME",
-      );
+      .appendField(new Blockly.FieldDropdown(options), "NAME");
   }
-  if (name) {
-    return [generator.getVariableName("arg_" + name), Order.NONE];
+  if (name_real) {
+    return [generator.getVariableName("arg_" + name_real), Order.NONE];
   }
   return ["", Order.ATOMIC];
 };
