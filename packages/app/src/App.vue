@@ -5,6 +5,7 @@ import ContentCard from "@/components/ContentCard.vue";
 import BlocklyTab from "@/components/BlocklyTab.vue";
 import TutorialTab from "@/components/TutorialTab.vue";
 import CodeTab from "@/components/CodeTab.vue";
+import ConfigTab from "@/components/ConfigTab.vue";
 import ButtonPanel from "@/components/ButtonPanel.vue";
 // Workspace
 import { loadJson, generateCode } from "@/workspace";
@@ -60,6 +61,9 @@ onMounted(() => {
           </template>
           <template v-slot:tab-2>
             <CodeTab />
+          </template>
+          <template v-slot:tab-3>
+            <ConfigTab />
           </template>
         </ContentCard>
         <ButtonPanel />

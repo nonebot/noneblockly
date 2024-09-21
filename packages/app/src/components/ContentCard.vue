@@ -10,6 +10,7 @@
         <v-tab value="tab-0"> 编程 </v-tab>
         <v-tab value="tab-1"> 教程 </v-tab>
         <v-tab value="tab-2"> 代码 </v-tab>
+        <v-tab value="tab-3"> 配置 </v-tab>
       </v-tabs>
     </v-toolbar>
 
@@ -34,6 +35,14 @@
         <v-card>
           <div class="content-tab">
             <slot name="tab-2" />
+          </div>
+        </v-card>
+      </v-window-item>
+
+      <v-window-item value="tab-3">
+        <v-card>
+          <div class="content-tab">
+            <slot name="tab-3" />
           </div>
         </v-card>
       </v-window-item>

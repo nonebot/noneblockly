@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { useTheme } from "vuetify";
 import {
-  exportZip,
+  outputsStore,
   loadJson,
   saveJson,
-  outputsStore,
+  exportPress,
   setWorkspaceTheme,
 } from "@/workspace";
 
@@ -49,41 +49,20 @@ function toggleTheme() {
       <v-btn color="tertiary" @click="saveJson">
         <v-icon :icon="mdiContentSave"></v-icon>
         暂存
-        <!-- SAVE -->
         <v-tooltip activator="parent" location="bottom"> 暂存工作区 </v-tooltip>
       </v-btn>
 
       <v-btn color="tertiary" @click="loadJson">
         <v-icon :icon="mdiFileRestore"></v-icon>
         恢复
-        <!-- RESTORE -->
         <v-tooltip activator="parent" location="bottom">
           恢复保存的工作区
         </v-tooltip>
       </v-btn>
 
-      <v-btn color="tertiary" @click="">
-        <v-icon :icon="mdiFileDownload"></v-icon>
-        下载
-        <!-- RESTORE -->
-        <v-tooltip activator="parent" location="bottom">
-          下载工作区源代码
-        </v-tooltip>
-      </v-btn>
-
-      <v-btn color="tertiary" @click="">
-        <v-icon :icon="mdiFileUpload"></v-icon>
-        导入
-        <!-- RESTORE -->
-        <v-tooltip activator="parent" location="bottom">
-          导入工作区源代码
-        </v-tooltip>
-      </v-btn>
-
-      <v-btn color="tertiary" @click="exportZip">
+      <v-btn color="tertiary" @click="exportPress">
         <v-icon :icon="mdiLanguagePython"></v-icon>
         导出项目
-        <!-- RESTORE -->
         <v-tooltip activator="parent" location="bottom">
           导出 NoneBot 项目
         </v-tooltip>
