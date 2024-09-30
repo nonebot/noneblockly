@@ -110,6 +110,7 @@ export function initWorkspaceState() {
   let startBlocks = workspaceStore.startBlocks;
   let workspace = Blockly.getMainWorkspace();
   Blockly.serialization.workspaces.load(startBlocks, workspace);
+  outputsStore.activeTab = "tab-0";
 }
 
 export function generateCode() {

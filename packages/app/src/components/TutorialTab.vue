@@ -11,7 +11,7 @@ import { initWorkspaceState } from "@/workspace";
   </v-card-text>
   <v-card-text>
     <v-btn color="tertiary" @click="initWorkspaceState">
-      点击此按钮加载示例
+      点击此按钮加载默认示例
     </v-btn>
   </v-card-text>
   <v-card-text>
