@@ -1,64 +1,21 @@
 import * as Blockly from "blockly/core";
-import type { Block } from "blockly/core/block";
 import type { BlockDefinition } from "blockly/core/blocks";
-import type { Connection } from "blockly/core/connection";
 import type { BlockSvg } from "blockly/core/block_svg";
-import type { Workspace } from "blockly/core/workspace";
+
+import { createPlusField } from "./fields/field_plus";
+import { createMinusField } from "./fields/field_minus";
 
 export const pythonDict: BlockDefinition[] = [
   {
-    type: "dicts_create_with_container",
-    message0: "字典 %1 %2",
-    args0: [
-      {
-        type: "input_dummy",
-      },
-      {
-        type: "input_statement",
-        name: "STACK",
-      },
-    ],
-    tooltip: "",
-    helpUrl: "",
-    colour: 0,
-    // style: "dict_blocks",
-  },
-  {
-    type: "dicts_create_with_item",
-    message0: "键值对",
-    previousStatement: null,
-    nextStatement: null,
-    tooltip: "",
-    helpUrl: "",
-    enableContextMenu: false,
-    colour: 0,
-    // style: "dict_blocks",
-  },
-  {
     type: "dicts_create_with",
-    message0: "创建字典 %1 KEY-0 %2 VALUE-0 %3 KEY-1 %4 VALUE-1 %5",
+    message0: "创建字典 %1 空字典 %2",
     args0: [
       {
         type: "input_dummy",
       },
       {
-        type: "input_value",
-        name: "KEY0",
-        align: "RIGHT",
-      },
-      {
-        type: "input_value",
-        name: "VALUE0",
-        align: "RIGHT",
-      },
-      {
-        type: "input_value",
-        name: "KEY1",
-        align: "RIGHT",
-      },
-      {
-        type: "input_value",
-        name: "VALUE1",
+        type: "input_dummy",
+        name: "EMPTY",
         align: "RIGHT",
       },
     ],
@@ -71,7 +28,7 @@ export const pythonDict: BlockDefinition[] = [
   },
   {
     type: "dicts_get",
-    message0: "从字典 %1 中取 KEY %2 的值",
+    message0: "从字典 %1 中取键 %2 的值",
     args0: [
       {
         type: "input_value",
@@ -92,8 +49,34 @@ export const pythonDict: BlockDefinition[] = [
     // style: "dict_blocks",
   },
   {
+    type: "dicts_get_multi",
+    message0: "从字典 %1 连续取值 %2 %3",
+    args0: [
+      {
+        type: "input_value",
+        name: "DICT",
+        check: "dict",
+      },
+      {
+        type: "input_dummy",
+        name: "TOOLS",
+      },
+      {
+        type: "input_dummy",
+        name: "KEYS",
+      },
+    ],
+    output: null,
+    inputsInline: true,
+    tooltip: "",
+    helpUrl: "",
+    mutator: "dict_get_multi_mutator",
+    colour: 0,
+    // style: "dict_blocks",
+  },
+  {
     type: "dicts_set",
-    message0: "设置字典 %1 中 KEY %2 的值为 %3",
+    message0: "设置字典 %1 键 %2 的值为 %3",
     args0: [
       {
         type: "input_value",
@@ -128,6 +111,7 @@ export const pythonDict: BlockDefinition[] = [
 export type DictCreateWithBlock = BlockSvg & DictCreateWithMixin;
 interface DictCreateWithMixin extends DictCreateWithMixinType {
   itemCount_: number;
+  topInput_: Blockly.Input | undefined;
 }
 type DictCreateWithMixinType = typeof DICTS_CREATE_WITH;
 
@@ -136,11 +120,8 @@ const DICTS_CREATE_WITH = {
    * Number of item inputs the block has.
    * @type {number}
    */
-  itemCount_: 2,
+  itemCount_: 0,
 
-  /**
-   * Block for creating a dict with any number of key-value of any type.
-   */
   /**
    * Create XML to represent list inputs.
    * Backwards compatible serialization implementation.
@@ -150,6 +131,7 @@ const DICTS_CREATE_WITH = {
     container.setAttribute("items", String(this.itemCount_));
     return container;
   },
+
   /**
    * Parse XML to restore the list inputs.
    * Backwards compatible serialization implementation.
@@ -162,6 +144,7 @@ const DICTS_CREATE_WITH = {
     this.itemCount_ = parseInt(items, 10);
     this.updateShape_();
   },
+
   /**
    * Returns the state of this block as a JSON serializable object.
    *
@@ -172,175 +155,261 @@ const DICTS_CREATE_WITH = {
       itemCount: this.itemCount_,
     };
   },
+
   /**
    * Applies the given state to this block.
    *
    * @param state The state to apply to this block, ie the item count.
    */
   loadExtraState: function (this: DictCreateWithBlock, state: any) {
-    this.itemCount_ = state["itemCount"];
+    const count = state["itemCount"];
+    while (this.itemCount_ < count) {
+      this.addPart_();
+    }
     this.updateShape_();
   },
-  /**
-   * Populate the mutator's dialog with this block's components.
-   *
-   * @param workspace Mutator's workspace.
-   * @returns Root block in mutator.
-   */
-  decompose: function (this: DictCreateWithBlock, workspace: Workspace): any {
-    const containerBlock = workspace.newBlock("dicts_create_with_container");
-    (containerBlock as BlockSvg).initSvg();
-    let connection = containerBlock.getInput("STACK")!.connection;
-    for (let i = 0; i < this.itemCount_; i++) {
-      const itemBlock = workspace.newBlock("dicts_create_with_item");
-      (itemBlock as BlockSvg).initSvg();
-      if (!itemBlock.previousConnection) {
-        throw new Error("itemBlock has no previousConnection");
-      }
-      connection!.connect(itemBlock.previousConnection);
-      connection = itemBlock.nextConnection;
-    }
-    return containerBlock;
-  },
-  /**
-   * Reconfigure this block based on the mutator dialog's components.
-   *
-   * @param containerBlock Root block in mutator.
-   */
-  compose: function (this: DictCreateWithBlock, containerBlock: Block) {
-    let itemBlock: ItemBlock | null = containerBlock.getInputTargetBlock(
-      "STACK",
-    ) as ItemBlock;
-    // Count number of inputs.
-    const connections: Connection[] = [];
-    while (itemBlock) {
-      if (itemBlock.isInsertionMarker()) {
-        itemBlock = itemBlock.getNextBlock() as ItemBlock | null;
-        continue;
-      }
-      connections.push(itemBlock.valueConnection_?.key as Connection);
-      connections.push(itemBlock.valueConnection_?.value as Connection);
-      itemBlock = itemBlock.getNextBlock() as ItemBlock | null;
-    }
-    // Disconnect any children that don't belong.
-    for (let i = 0; i < this.itemCount_; i++) {
-      const connection_key = this.getInput("KEY" + i)!.connection!
-        .targetConnection;
-      if (connection_key && connections.indexOf(connection_key) === -1) {
-        connection_key.disconnect();
-      }
-      const connection_value = this.getInput("VALUE" + i)!.connection!
-        .targetConnection;
-      if (connection_value && connections.indexOf(connection_value) === -1) {
-        connection_value.disconnect();
-      }
-    }
-    this.itemCount_ = connections.length / 2;
-    this.updateShape_();
-    // Reconnect any child blocks.
-    for (let i = 0; i < this.itemCount_; i++) {
-      connections[i]?.reconnect(this, "KEY" + i);
-      connections[i]?.reconnect(this, "VALUE" + i);
-    }
-  },
-  saveConnections: function (this: DictCreateWithBlock, containerBlock: Block) {
-    // Store a pointer to any connected child blocks.
-    let itemBlock: ItemBlock | null = containerBlock.getInputTargetBlock(
-      "STACK",
-    ) as ItemBlock;
-    let i = 0;
-    while (itemBlock) {
-      if (itemBlock.isInsertionMarker()) {
-        itemBlock = itemBlock.getNextBlock() as ItemBlock | null;
-        continue;
-      }
-      const key_input = this.getInput("KEY" + i);
-      const value_input = this.getInput("VALUE" + i);
-      itemBlock.valueConnection_ = {
-        key: key_input?.connection!.targetConnection as Connection,
-        value: value_input?.connection!.targetConnection as Connection,
-      };
-      itemBlock = itemBlock.getNextBlock() as ItemBlock | null;
-      i++;
-    }
-  },
+
   /**
    * Modify this block to have the correct number of inputs.
    */
   updateShape_: function (this: DictCreateWithBlock) {
-    if (this.itemCount_ && this.getInput("EMPTY")) {
+    this.updateMinus_();
+  },
+
+  /**
+   * Callback for the plus image. Adds an input to the end of the block and
+   * updates the state of the minus.
+   */
+  plus: function (this: DictCreateWithBlock) {
+    this.addPart_();
+    this.updateMinus_();
+  },
+
+  /**
+   * Callback for the minus image. Removes an input from the end of the block
+   * and updates the state of the minus.
+   */
+  minus: function (this: DictCreateWithBlock) {
+    if (this.itemCount_ == 0) {
+      return;
+    }
+    this.removePart_();
+    this.updateMinus_();
+  },
+
+  // To properly keep track of indices we have to increment before/after adding
+  // the inputs, and decrement the opposite.
+  // Because we want our first input to be ARG0 (not ARG1) we increment after.
+
+  /**
+   * Adds an input to the end of the block. If the block currently has no
+   * inputs it updates the top 'EMPTY' input to receive a block.
+   * @this {Blockly.Block}
+   * @private
+   */
+  addPart_: function (this: DictCreateWithBlock) {
+    if (this.itemCount_ == 0) {
       this.removeInput("EMPTY");
-    } else if (!this.itemCount_ && !this.getInput("EMPTY")) {
-      this.appendDummyInput("EMPTY").appendField("空字典");
+      this.topInput_ = this.appendValueInput("KEY" + String(this.itemCount_))
+        .setAlign(Blockly.inputs.Align.RIGHT)
+        .appendField(createPlusField(), "PLUS")
+        .appendField(`键 ${this.itemCount_}`);
+      this.appendValueInput("VALUE" + String(this.itemCount_))
+        .setAlign(Blockly.inputs.Align.RIGHT)
+        .appendField(`值 ${this.itemCount_}`);
+    } else {
+      this.appendValueInput("KEY" + String(this.itemCount_))
+        .setAlign(Blockly.inputs.Align.RIGHT)
+        .appendField(`键 ${this.itemCount_}`);
+      this.appendValueInput("VALUE" + String(this.itemCount_))
+        .setAlign(Blockly.inputs.Align.RIGHT)
+        .appendField(`值 ${this.itemCount_}`);
     }
-    // Add new inputs.
-    for (let i = 0; i < this.itemCount_; i++) {
-      if (!this.getInput("KEY" + i)) {
-        this.appendValueInput("KEY" + i)
-          .setAlign(Blockly.inputs.Align.RIGHT)
-          .appendField("KEY-" + i);
-      }
-      if (!this.getInput("VALUE" + i)) {
-        this.appendValueInput("VALUE" + i)
-          .setAlign(Blockly.inputs.Align.RIGHT)
-          .appendField("VALUE-" + i);
-      }
+    this.itemCount_++;
+  },
+
+  /**
+   * Removes an input from the end of the block. If we are removing the last
+   * input this updates the block to have an 'EMPTY' top input.
+   * @this {Blockly.Block}
+   * @private
+   */
+  removePart_: function (this: DictCreateWithBlock) {
+    this.itemCount_--;
+    this.removeInput("KEY" + String(this.itemCount_));
+    this.removeInput("VALUE" + String(this.itemCount_));
+    if (this.itemCount_ == 0) {
+      (this.topInput_ as Blockly.Input) = this.appendDummyInput("EMPTY")
+        .appendField(createPlusField(), "PLUS")
+        .setAlign(Blockly.inputs.Align.RIGHT)
+        .appendField("空字典");
     }
-    // Remove deleted inputs.
-    for (let i = this.itemCount_; this.getInput("KEY" + i); i++) {
-      this.removeInput("KEY" + i);
-    }
-    for (let i = this.itemCount_; this.getInput("VALUE" + i); i++) {
-      this.removeInput("VALUE" + i);
+  },
+
+  /**
+   * Makes it so the minus is visible iff there is an input available to remove.
+   * @private
+   */
+  updateMinus_: function (this: DictCreateWithBlock) {
+    const minusField = this.getField("MINUS");
+    if (!minusField && this.itemCount_ > 0) {
+      this.topInput_?.insertFieldAt(1, createMinusField(), "MINUS");
+    } else if (minusField && this.itemCount_ < 1) {
+      this.topInput_?.removeField("MINUS");
     }
   },
 };
 
-/** Type for a 'dicts_create_with_container' block. */
-type ContainerBlock = Block & ContainerMutator;
-interface ContainerMutator extends ContainerMutatorType {}
-type ContainerMutatorType = typeof DICTS_CREATE_WITH_CONTAINER;
-
-const DICTS_CREATE_WITH_CONTAINER = {
-  /**
-   * Mutator block for dict container.
-   */
-  init: function (this: ContainerBlock) {
-    this.setStyle("dict_blocks");
-    this.appendStatementInput("STACK");
-    this.contextMenu = false;
-  },
-};
-
-/** Type for a 'dicts_create_with_item' block. */
-type ItemBlock = Block & ItemMutator;
-interface ItemConnection {
-  key: Connection;
-  value: Connection;
-}
-interface ItemMutator extends ItemMutatorType {
-  valueConnection_?: ItemConnection;
-}
-type ItemMutatorType = typeof DICTS_CREATE_WITH_ITEM;
-
-const DICTS_CREATE_WITH_ITEM = {
-  /**
-   * Mutator block for adding items.
-   */
-  init: function (this: ItemBlock) {},
+const DICTS_CREATE_WITH_EXTENSION = function (this: DictCreateWithBlock) {
+  this.itemCount_ = 0;
+  this.updateShape_();
+  this.getInput("EMPTY")?.insertFieldAt(0, createPlusField(), "PLUS");
 };
 
 /**
- * Performs final setup of a dicts_create_with block.
+ * Type of a 'dicts_get_multi' block.
+ *
+ * @internal
  */
-const DICTS_CREATE_WITH_EXTENSION = function (this: DictCreateWithBlock) {
-  // Initialize the mutator values.
-  this.itemCount_ = 2;
+export type DictGetMultiBlock = BlockSvg & DictGetMultiMixin;
+interface DictGetMultiMixin extends DictGetMultiMixinType {
+  itemCount_: number;
+}
+type DictGetMultiMixinType = typeof DICTS_GET_MULTI;
+
+const DICTS_GET_MULTI = {
+  /**
+   * Number of item inputs the block has.
+   * @type {number}
+   */
+  itemCount_: 1,
+
+  /**
+   * Create XML to represent list inputs.
+   * Backwards compatible serialization implementation.
+   */
+  mutationToDom: function (this: DictGetMultiBlock): Element {
+    const container = Blockly.utils.xml.createElement("mutation");
+    container.setAttribute("items", String(this.itemCount_));
+    return container;
+  },
+
+  /**
+   * Parse XML to restore the list inputs.
+   * Backwards compatible serialization implementation.
+   *
+   * @param container XML storage element.
+   */
+  domToMutation: function (this: DictGetMultiBlock, xmlElement: Element) {
+    const items = xmlElement.getAttribute("items");
+    if (!items) throw new TypeError("element did not have items");
+    this.itemCount_ = parseInt(items, 10);
+    this.updateShape_();
+  },
+
+  /**
+   * Returns the state of this block as a JSON serializable object.
+   *
+   * @returns The state of this block, ie the item count.
+   */
+  saveExtraState: function (this: DictGetMultiBlock): { itemCount: number } {
+    return {
+      itemCount: this.itemCount_,
+    };
+  },
+
+  /**
+   * Applies the given state to this block.
+   *
+   * @param state The state to apply to this block, ie the item count.
+   */
+  loadExtraState: function (this: DictGetMultiBlock, state: any) {
+    const count = state["itemCount"];
+    while (this.itemCount_ < count) {
+      this.addPart_();
+    }
+    this.updateShape_();
+  },
+
+  /**
+   * Modify this block to have the correct number of inputs.
+   */
+  updateShape_: function (this: DictGetMultiBlock) {
+    this.updateMinus_();
+  },
+
+  /**
+   * Callback for the plus image. Adds an input to the end of the block and
+   * updates the state of the minus.
+   */
+  plus: function (this: DictGetMultiBlock) {
+    this.addPart_();
+    this.updateMinus_();
+  },
+
+  /**
+   * Callback for the minus image. Removes an input from the end of the block
+   * and updates the state of the minus.
+   */
+  minus: function (this: DictGetMultiBlock) {
+    if (this.itemCount_ == 1) {
+      return;
+    }
+    this.removePart_();
+    this.updateMinus_();
+  },
+
+  // To properly keep track of indices we have to increment before/after adding
+  // the inputs, and decrement the opposite.
+  // Because we want our first input to be ARG0 (not ARG1) we increment after.
+
+  /**
+   * Adds an input to the end of the block. If the block currently has no
+   * inputs it updates the top 'EMPTY' input to receive a block.
+   * @this {Blockly.Block}
+   * @private
+   */
+  addPart_: function (this: DictGetMultiBlock) {
+    this.getInput("KEYS")?.appendField(
+      new Blockly.FieldTextInput("key" + String(this.itemCount_)),
+      "KEY" + String(this.itemCount_),
+    );
+    this.itemCount_++;
+  },
+
+  /**
+   * Removes an input from the end of the block. If we are removing the last
+   * input this updates the block to have an 'EMPTY' top input.
+   * @this {Blockly.Block}
+   * @private
+   */
+  removePart_: function (this: DictGetMultiBlock) {
+    this.itemCount_--;
+    this.getInput("KEYS")?.removeField("KEY" + String(this.itemCount_));
+  },
+
+  /**
+   * Makes it so the minus is visible iff there is an input available to remove.
+   * @private
+   */
+  updateMinus_: function (this: DictGetMultiBlock) {
+    const minusField = this.getField("MINUS");
+    if (!minusField && this.itemCount_ > 1) {
+      this.getInput("TOOLS")?.insertFieldAt(1, createMinusField(), "MINUS");
+    } else if (minusField && this.itemCount_ < 2) {
+      this.getInput("TOOLS")?.removeField("MINUS");
+    }
+  },
+};
+
+const DICTS_GET_MULTI_EXTENSION = function (this: DictGetMultiBlock) {
+  this.itemCount_ = 1;
   this.updateShape_();
-  // Configure the mutator UI.
-  this.setMutator(
-    new Blockly.icons.MutatorIcon(["dicts_create_with_item"], this),
+  this.getInput("KEYS")?.appendField(
+    new Blockly.FieldTextInput("key0"),
+    "KEY0",
   );
+  this.getInput("TOOLS")?.insertFieldAt(0, createPlusField(), "PLUS");
 };
 
 if (Blockly.Extensions.isRegistered("dict_create_with_mutator")) {
@@ -350,4 +419,13 @@ Blockly.Extensions.registerMutator(
   "dict_create_with_mutator",
   DICTS_CREATE_WITH,
   DICTS_CREATE_WITH_EXTENSION,
+);
+
+if (Blockly.Extensions.isRegistered("dict_get_multi_mutator")) {
+  Blockly.Extensions.unregister("dict_get_multi_mutator");
+}
+Blockly.Extensions.registerMutator(
+  "dict_get_multi_mutator",
+  DICTS_GET_MULTI,
+  DICTS_GET_MULTI_EXTENSION,
 );

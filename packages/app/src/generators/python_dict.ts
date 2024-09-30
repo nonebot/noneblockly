@@ -1,7 +1,7 @@
 import { Order } from "blockly/python";
 import * as Blockly from "blockly/core";
 
-import { DictCreateWithBlock } from "@/blocks/python_dict";
+import { DictCreateWithBlock, DictGetMultiBlock } from "@/blocks/python_dict";
 
 export const forBlock = Object.create(null);
 
@@ -15,6 +15,26 @@ forBlock["dicts_get"] = function (
     return ["None", Order.ATOMIC];
   }
   const code = `${dict}.get("${key}")`;
+  return [code, Order.ATOMIC];
+};
+
+forBlock["dicts_get_multi"] = function (
+  block: DictGetMultiBlock,
+  generator: Blockly.CodeGenerator,
+) {
+  const dict = generator.valueToCode(block, "DICT", Order.MEMBER) || "{}";
+  let code = "";
+  let key = block.getFieldValue("KEY0");
+  if (!key) {
+    return ["None", Order.ATOMIC];
+  }
+  code = `${dict}.get("${key}")`;
+  for (let n = 1; n < block.itemCount_; n++) {
+    key = block.getFieldValue("KEY" + n);
+    if (key) {
+      code = `(${code} or {}).get(${key})`;
+    }
+  }
   return [code, Order.ATOMIC];
 };
 
