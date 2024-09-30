@@ -11,15 +11,15 @@ export const startBlocks = {
         inputs: {
           HANDLE: {
             block: {
-              type: "store_load_json",
-              id: "d.$llW7Lq)~KG{Z|h1+B",
-              fields: { FILE: "save.json" },
+              type: "variables_set",
+              id: "9_AQ_@)mWU$=2GkYbT-d",
+              fields: { VAR: { id: "VSvr3AeHEP),5NB5v$+;" } },
               inputs: {
-                DICT: {
+                VALUE: {
                   block: {
-                    type: "variables_get",
-                    id: "E,j@$a(@v[(]u_R${B+Z",
-                    fields: { VAR: { id: "VSvr3AeHEP),5NB5v$+;" } },
+                    type: "store_load_json",
+                    id: "3~H`IY?A(%(Bb+8/wL3c",
+                    fields: { FILE: "save.json" },
                   },
                 },
               },
@@ -39,9 +39,7 @@ export const startBlocks = {
                             block: {
                               type: "variables_get",
                               id: "[Ws*B$JWgLY]BeT`^_=]",
-                              fields: {
-                                VAR: { id: "VSvr3AeHEP),5NB5v$+;" },
-                              },
+                              fields: { VAR: { id: "VSvr3AeHEP),5NB5v$+;" } },
                             },
                           },
                         },
@@ -90,9 +88,7 @@ export const startBlocks = {
                               block: {
                                 type: "variables_get",
                                 id: "7iF8)`YtA.s.-@v_dYNo",
-                                fields: {
-                                  VAR: { id: "VSvr3AeHEP),5NB5v$+;" },
-                                },
+                                fields: { VAR: { id: "VSvr3AeHEP),5NB5v$+;" } },
                               },
                             },
                             VALUE: {

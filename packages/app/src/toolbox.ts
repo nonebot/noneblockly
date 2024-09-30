@@ -365,6 +365,10 @@ export const toolbox = {
         },
         {
           kind: "BLOCK",
+          type: "dicts_get_multi",
+        },
+        {
+          kind: "BLOCK",
           type: "dicts_set",
         },
       ],
@@ -440,6 +444,10 @@ export const toolbox = {
           kind: "BLOCK",
           type: "alconna_arg_get",
         },
+        {
+          kind: "BLOCK",
+          type: "nonebot_send",
+        },
       ],
       name: "跨平台命令处理",
       colour: "90",
@@ -454,6 +462,14 @@ export const toolbox = {
         {
           kind: "BLOCK",
           type: "store_load_json",
+        },
+        {
+          kind: "BLOCK",
+          type: "store_save_text",
+        },
+        {
+          kind: "BLOCK",
+          type: "store_load_text",
         },
       ],
       name: "文件存储",
