@@ -6,7 +6,21 @@
     "declarationMap": true,
     "module": "ES2015",
     "moduleResolution": "node",
+    "resolveJsonModule": true,
     "target": "ES2015",
-    "strict": true
-  }
+    "strict": true,
+    // avoid jszip error
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": [
+    "./src/**/*.ts",
+    "./src/**/*.d.ts",
+    "./src/**/*.tsx",
+    "./src/**/*.vue",
+    "./src/**/*.vue.ts",
+    "./src/**/*.json"
+  ]
 }

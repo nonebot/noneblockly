@@ -1,343 +1,145 @@
-/**
- * @license
- * Copyright 2023 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
-/*
-This toolbox contains nearly every single built-in block that Blockly offers,
-in addition to the custom block 'add_text' this sample app adds.
-You probably don't need every single block, and should consider either rewriting
-your toolbox from scratch, or carefully choosing whether you need each block
-listed here.
-*/
-
 export const toolbox = {
   kind: "categoryToolbox",
   contents: [
     {
-      kind: "category",
-      name: "Logic",
-      categorystyle: "logic_category",
+      kind: "CATEGORY",
       contents: [
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "controls_if",
         },
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "logic_compare",
         },
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "logic_operation",
         },
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "logic_negate",
         },
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "logic_boolean",
         },
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "logic_null",
         },
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "logic_ternary",
         },
       ],
+      name: "逻辑",
+      categorystyle: "logic_category",
     },
     {
-      kind: "category",
-      name: "Loops",
-      categorystyle: "loop_category",
+      kind: "CATEGORY",
       contents: [
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "controls_repeat_ext",
-          inputs: {
-            TIMES: {
-              shadow: {
-                type: "math_number",
-                fields: {
-                  NUM: 10,
-                },
-              },
-            },
-          },
         },
         {
-          kind: "block",
+          kind: "BLOCK",
+          type: "controls_repeat",
+        },
+        {
+          kind: "BLOCK",
           type: "controls_whileUntil",
         },
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "controls_for",
-          inputs: {
-            FROM: {
-              shadow: {
-                type: "math_number",
-                fields: {
-                  NUM: 1,
-                },
-              },
-            },
-            TO: {
-              shadow: {
-                type: "math_number",
-                fields: {
-                  NUM: 10,
-                },
-              },
-            },
-            BY: {
-              shadow: {
-                type: "math_number",
-                fields: {
-                  NUM: 1,
-                },
-              },
-            },
-          },
         },
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "controls_forEach",
         },
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "controls_flow_statements",
         },
       ],
+      name: "循环",
+      categorystyle: "loop_category",
     },
     {
-      kind: "category",
-      name: "Math",
-      categorystyle: "math_category",
+      kind: "CATEGORY",
       contents: [
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "math_number",
-          fields: {
-            NUM: 123,
-          },
+          gap: "32",
         },
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "math_arithmetic",
-          inputs: {
-            A: {
-              shadow: {
-                type: "math_number",
-                fields: {
-                  NUM: 1,
-                },
-              },
-            },
-            B: {
-              shadow: {
-                type: "math_number",
-                fields: {
-                  NUM: 1,
-                },
-              },
-            },
-          },
         },
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "math_single",
-          inputs: {
-            NUM: {
-              shadow: {
-                type: "math_number",
-                fields: {
-                  NUM: 9,
-                },
-              },
-            },
-          },
         },
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "math_trig",
-          inputs: {
-            NUM: {
-              shadow: {
-                type: "math_number",
-                fields: {
-                  NUM: 45,
-                },
-              },
-            },
-          },
         },
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "math_constant",
         },
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "math_number_property",
-          inputs: {
-            NUMBER_TO_CHECK: {
-              shadow: {
-                type: "math_number",
-                fields: {
-                  NUM: 0,
-                },
-              },
-            },
-          },
         },
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "math_round",
-          fields: {
-            OP: "ROUND",
-          },
-          inputs: {
-            NUM: {
-              shadow: {
-                type: "math_number",
-                fields: {
-                  NUM: 3.1,
-                },
-              },
-            },
-          },
         },
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "math_on_list",
-          fields: {
-            OP: "SUM",
-          },
         },
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "math_modulo",
-          inputs: {
-            DIVIDEND: {
-              shadow: {
-                type: "math_number",
-                fields: {
-                  NUM: 64,
-                },
-              },
-            },
-            DIVISOR: {
-              shadow: {
-                type: "math_number",
-                fields: {
-                  NUM: 10,
-                },
-              },
-            },
-          },
         },
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "math_constrain",
-          inputs: {
-            VALUE: {
-              shadow: {
-                type: "math_number",
-                fields: {
-                  NUM: 50,
-                },
-              },
-            },
-            LOW: {
-              shadow: {
-                type: "math_number",
-                fields: {
-                  NUM: 1,
-                },
-              },
-            },
-            HIGH: {
-              shadow: {
-                type: "math_number",
-                fields: {
-                  NUM: 100,
-                },
-              },
-            },
-          },
         },
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "math_random_int",
-          inputs: {
-            FROM: {
-              shadow: {
-                type: "math_number",
-                fields: {
-                  NUM: 1,
-                },
-              },
-            },
-            TO: {
-              shadow: {
-                type: "math_number",
-                fields: {
-                  NUM: 100,
-                },
-              },
-            },
-          },
         },
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "math_random_float",
         },
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "math_atan2",
-          inputs: {
-            X: {
-              shadow: {
-                type: "math_number",
-                fields: {
-                  NUM: 1,
-                },
-              },
-            },
-            Y: {
-              shadow: {
-                type: "math_number",
-                fields: {
-                  NUM: 1,
-                },
-              },
-            },
-          },
         },
       ],
+      name: "数学",
+      categorystyle: "math_category",
     },
     {
-      kind: "category",
-      name: "Text",
-      categorystyle: "text_category",
+      kind: "CATEGORY",
       contents: [
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "text",
         },
         {
-          kind: "block",
-          type: "text_multiline",
-        },
-        {
-          kind: "block",
+          kind: "BLOCK",
           type: "text_join",
         },
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "text_append",
           inputs: {
             TEXT: {
@@ -351,7 +153,7 @@ export const toolbox = {
           },
         },
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "text_length",
           inputs: {
             VALUE: {
@@ -365,7 +167,7 @@ export const toolbox = {
           },
         },
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "text_isEmpty",
           inputs: {
             VALUE: {
@@ -379,11 +181,11 @@ export const toolbox = {
           },
         },
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "text_indexOf",
           inputs: {
             VALUE: {
-              block: {
+              BLOCK: {
                 type: "variables_get",
               },
             },
@@ -398,29 +200,29 @@ export const toolbox = {
           },
         },
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "text_charAt",
           inputs: {
             VALUE: {
-              block: {
+              BLOCK: {
                 type: "variables_get",
               },
             },
           },
         },
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "text_getSubstring",
           inputs: {
             STRING: {
-              block: {
+              BLOCK: {
                 type: "variables_get",
               },
             },
           },
         },
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "text_changeCase",
           inputs: {
             TEXT: {
@@ -434,7 +236,7 @@ export const toolbox = {
           },
         },
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "text_trim",
           inputs: {
             TEXT: {
@@ -448,7 +250,7 @@ export const toolbox = {
           },
         },
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "text_count",
           inputs: {
             SUB: {
@@ -464,7 +266,7 @@ export const toolbox = {
           },
         },
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "text_replace",
           inputs: {
             FROM: {
@@ -485,7 +287,7 @@ export const toolbox = {
           },
         },
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "text_reverse",
           inputs: {
             TEXT: {
@@ -495,222 +297,244 @@ export const toolbox = {
             },
           },
         },
-        {
-          kind: "block",
-          type: "add_text",
-          inputs: {
-            TEXT: {
-              shadow: {
-                type: "text",
-                fields: {
-                  TEXT: "abc",
-                },
-              },
-            },
-            COLOR: {
-              shadow: {
-                type: "colour_picker",
-                fields: {
-                  COLOUR: "#aa00cc",
-                },
-              },
-            },
-          },
-        },
       ],
+      name: "文本",
+      categorystyle: "text_category",
     },
     {
-      kind: "category",
-      name: "Lists",
-      categorystyle: "list_category",
+      kind: "CATEGORY",
       contents: [
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "lists_create_with",
         },
         {
-          kind: "block",
-          type: "lists_create_with",
-        },
-        {
-          kind: "block",
+          kind: "BLOCK",
           type: "lists_repeat",
-          inputs: {
-            NUM: {
-              shadow: {
-                type: "math_number",
-                fields: {
-                  NUM: 5,
-                },
-              },
-            },
-          },
         },
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "lists_length",
         },
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "lists_isEmpty",
         },
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "lists_indexOf",
-          inputs: {
-            VALUE: {
-              block: {
-                type: "variables_get",
-              },
-            },
-          },
         },
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "lists_getIndex",
-          inputs: {
-            VALUE: {
-              block: {
-                type: "variables_get",
-              },
-            },
-          },
         },
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "lists_setIndex",
-          inputs: {
-            LIST: {
-              block: {
-                type: "variables_get",
-              },
-            },
-          },
         },
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "lists_getSublist",
-          inputs: {
-            LIST: {
-              block: {
-                type: "variables_get",
-              },
-            },
-          },
         },
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "lists_split",
-          inputs: {
-            DELIM: {
-              shadow: {
-                type: "text",
-                fields: {
-                  TEXT: ",",
-                },
-              },
-            },
-          },
         },
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "lists_sort",
         },
         {
-          kind: "block",
+          kind: "BLOCK",
           type: "lists_reverse",
         },
       ],
+      name: "列表",
+      categorystyle: "list_category",
     },
     {
-      kind: "category",
-      name: "Color",
-      categorystyle: "colour_category",
+      kind: "CATEGORY",
       contents: [
         {
-          kind: "block",
-          type: "colour_picker",
+          kind: "BLOCK",
+          type: "dicts_create_with",
         },
         {
-          kind: "block",
-          type: "colour_random",
+          kind: "BLOCK",
+          type: "dicts_get",
         },
         {
-          kind: "block",
-          type: "colour_rgb",
-          inputs: {
-            RED: {
-              shadow: {
-                type: "math_number",
-                fields: {
-                  NUM: 100,
-                },
-              },
-            },
-            GREEN: {
-              shadow: {
-                type: "math_number",
-                fields: {
-                  NUM: 50,
-                },
-              },
-            },
-            BLUE: {
-              shadow: {
-                type: "math_number",
-                fields: {
-                  NUM: 0,
-                },
-              },
-            },
-          },
+          kind: "BLOCK",
+          type: "dicts_get_multi",
         },
         {
-          kind: "block",
-          type: "colour_blend",
-          inputs: {
-            COLOUR1: {
-              shadow: {
-                type: "colour_picker",
-                fields: {
-                  COLOUR: "#ff0000",
-                },
-              },
-            },
-            COLOUR2: {
-              shadow: {
-                type: "colour_picker",
-                fields: {
-                  COLOUR: "#3333ff",
-                },
-              },
-            },
-            RATIO: {
-              shadow: {
-                type: "math_number",
-                fields: {
-                  NUM: 0.5,
-                },
-              },
-            },
-          },
+          kind: "BLOCK",
+          type: "dicts_set",
         },
       ],
+      name: "字典",
+      colour: "0",
     },
     {
-      kind: "sep",
+      kind: "SEP",
     },
     {
-      kind: "category",
-      name: "Variables",
+      kind: "CATEGORY",
+      contents: [
+        {
+          kind: "LABEL",
+          text: "“消息处理”块会处理所有收到的消息",
+        },
+        {
+          kind: "BLOCK",
+          type: "nonebot_on_message",
+        },
+        {
+          kind: "LABEL",
+          text: "“命令处理”块只处理以指定前缀和命令起始的消息",
+        },
+        {
+          kind: "BLOCK",
+          type: "nonebot_on_command",
+        },
+        {
+          kind: "LABEL",
+          text: "以下参数或方法仅能在“消息处理”或“命令处理”语句中使用",
+        },
+        {
+          kind: "BLOCK",
+          type: "nonebot_param_text",
+        },
+        {
+          kind: "BLOCK",
+          type: "nonebot_send",
+        },
+      ],
+      name: "通用消息处理",
+      colour: "0",
+    },
+    {
+      kind: "CATEGORY",
+      contents: [
+        {
+          kind: "LABEL",
+          text: "“跨平台命令解析与处理”块提供更加灵活的跨平台命令解析支持",
+        },
+        {
+          kind: "BLOCK",
+          type: "nonebot_on_alconna",
+        },
+        {
+          kind: "LABEL",
+          text: "以下命令参数只能填充到“跨平台命令解析与处理”中对应位置",
+        },
+        {
+          kind: "BLOCK",
+          type: "alconna_const",
+        },
+        {
+          kind: "BLOCK",
+          type: "alconna_arg",
+        },
+        {
+          kind: "LABEL",
+          text: "以下参数或方法仅能在“跨平台命令解析与处理”语句中使用",
+        },
+        {
+          kind: "BLOCK",
+          type: "alconna_arg_get",
+        },
+        {
+          kind: "BLOCK",
+          type: "nonebot_send",
+        },
+      ],
+      name: "跨平台命令处理",
+      colour: "90",
+    },
+    {
+      kind: "CATEGORY",
+      contents: [
+        {
+          kind: "BLOCK",
+          type: "store_save_json",
+        },
+        {
+          kind: "BLOCK",
+          type: "store_load_json",
+        },
+        {
+          kind: "BLOCK",
+          type: "store_save_text",
+        },
+        {
+          kind: "BLOCK",
+          type: "store_load_text",
+        },
+      ],
+      name: "文件存储",
+      colour: "150",
+    },
+    {
+      kind: "CATEGORY",
+      contents: [
+        {
+          kind: "BLOCK",
+          type: "scheduler_add",
+        },
+        {
+          kind: "BLOCK",
+          type: "scheduler_remove",
+        },
+        {
+          kind: "LABEL",
+          text: "请将以下时间配置块填入定时任务创建语句中使用",
+        },
+        {
+          kind: "BLOCK",
+          type: "scheduler_time_interval",
+        },
+        {
+          kind: "BLOCK",
+          type: "scheduler_time_cron_daily",
+        },
+        {
+          kind: "BLOCK",
+          type: "scheduler_time_cron",
+        },
+      ],
+      name: "定时任务",
+      colour: "210",
+    },
+    {
+      kind: "CATEGORY",
+      contents: [
+        {
+          kind: "BLOCK",
+          type: "request_get",
+        },
+        {
+          kind: "BLOCK",
+          type: "request_post",
+        },
+      ],
+      name: "网络请求",
+      colour: "270",
+    },
+    {
+      kind: "SEP",
+    },
+    {
+      kind: "CATEGORY",
+      name: "变量",
       categorystyle: "variable_category",
       custom: "VARIABLE",
     },
-    {
-      kind: "category",
-      name: "Functions",
-      categorystyle: "procedure_category",
-      custom: "PROCEDURE",
-    },
+    // {
+    //   kind: "CATEGORY",
+    //   name: "函数",
+    //   categorystyle: "procedure_category",
+    //   custom: "PROCEDURE",
+    // },
   ],
 };
