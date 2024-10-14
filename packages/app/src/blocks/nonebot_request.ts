@@ -34,6 +34,7 @@ export const definitions: BlockDefinition[] = [
         name: "TYPE",
         options: [
           ["字典", "dict"],
+          ["列表", "list"],
           ["文本", "string"],
           ["二进制", "binary"],
         ],
@@ -90,7 +91,7 @@ export const definitions: BlockDefinition[] = [
       },
       {
         type: "input_value",
-        name: "HEADER",
+        name: "HEADERS",
         align: "RIGHT",
         check: "dict",
       },
@@ -99,6 +100,7 @@ export const definitions: BlockDefinition[] = [
         name: "TYPE",
         options: [
           ["字典", "dict"],
+          ["列表", "list"],
           ["文本", "string"],
           ["二进制", "binary"],
         ],
