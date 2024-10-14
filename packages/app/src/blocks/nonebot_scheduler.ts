@@ -28,8 +28,6 @@ export const definitions: BlockDefinition[] = [
         name: "HANDLE",
       },
     ],
-    previousStatement: null,
-    nextStatement: null,
     colour: 210,
   },
   {

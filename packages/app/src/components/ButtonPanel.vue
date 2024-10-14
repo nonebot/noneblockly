@@ -49,28 +49,30 @@ function toggleTheme() {
       <v-btn color="tertiary" @click="saveJson">
         <v-icon :icon="mdiContentSave"></v-icon>
         暂存
-        <v-tooltip activator="parent" location="bottom"> 暂存工作区 </v-tooltip>
+        <v-tooltip activator="parent" location="bottom">
+          暂存项目到浏览器
+        </v-tooltip>
       </v-btn>
 
       <v-btn color="tertiary" @click="loadJson">
         <v-icon :icon="mdiFileRestore"></v-icon>
         恢复
         <v-tooltip activator="parent" location="bottom">
-          恢复保存的工作区
+          恢复上次暂存的项目
         </v-tooltip>
       </v-btn>
 
       <v-btn color="tertiary" @click="exportPress">
         <v-icon :icon="mdiLanguagePython"></v-icon>
-        导出项目
+        导入导出
         <v-tooltip activator="parent" location="bottom">
-          导出 NoneBot 项目
+          导入导出项目设计文件，或生成 NoneBot 工程
         </v-tooltip>
       </v-btn>
 
       <v-spacer />
 
-      <v-btn color="primary" class="text-none" stacked>
+      <v-btn color="tertiary" class="text-none" stacked>
         <v-icon :icon="mdiThemeLightDark" @click="toggleTheme()"></v-icon>
       </v-btn>
     </v-toolbar>
@@ -89,8 +91,6 @@ function toggleTheme() {
 import {
   mdiContentSave,
   mdiFileRestore,
-  mdiFileDownload,
-  mdiFileUpload,
   mdiThemeLightDark,
   mdiLanguagePython,
 } from "@mdi/js";
