@@ -80,18 +80,24 @@ forBlock["alconna_arg_get"] = function (
   generator: PythonGenerator,
 ) {
   // This generator will also update the dropdown list
-  let name_real = block.getFieldValue("NAME");
+  let name = block.getFieldValue("NAME");
   const args = getAlconnaArg(block);
   let options = new Array();
+  // If the block is not initialized, it is reloading from saved
+  // Should rebuild the dropdown list and set the name to the saved name `block.name_`
   if (!block.isInitialized_ && block.name_ !== "") {
-    // Read from saved
-    name_real = block.name_;
+    name = block.name_;
     block.isInitialized_ = true;
-    if (args.indexOf(name_real) !== -1) {
-      options.push([name_real, name_real]);
+    // Make sure the selected value is the first one of the dropdown list
+    // Due to the dynamic dropdowns are not responding to set value calls correctly
+    // https://github.com/google/blockly/issues/3099
+    // This will also cause warnings in console:
+    // `Cannot set the dropdown's value to an unavailable option.`
+    if (args.indexOf(name) !== -1) {
+      options.push([name, name]);
     }
     args.forEach((arg) => {
-      if (arg !== name_real) {
+      if (arg !== name) {
         options.push([arg, arg]);
       }
     });
@@ -101,9 +107,11 @@ forBlock["alconna_arg_get"] = function (
       ?.appendField("获取参数")
       .appendField(new Blockly.FieldDropdown(options), "NAME");
   } else {
+    // If the block is initialized, update the saved name and rebuild the dropdown list
     args.forEach((arg) => {
       options.push([arg, arg]);
     });
+    block.name_ = name;
   }
   if (args.length === 0) {
     this.removeInput("PARAMS");
@@ -113,15 +121,15 @@ forBlock["alconna_arg_get"] = function (
       .appendField(new Blockly.FieldDropdown([["-", ""]]), "NAME");
     return ["", Order.ATOMIC];
   }
-  if (!args.find((arg) => arg === name_real)) {
+  if (!args.find((arg) => arg === name)) {
     this.removeInput("PARAMS");
     this.setWarningText("");
     this.appendDummyInput("PARAMS")
       ?.appendField("获取参数")
       .appendField(new Blockly.FieldDropdown(options), "NAME");
   }
-  if (name_real) {
-    return [generator.getVariableName("arg_" + name_real), Order.NONE];
+  if (name) {
+    return [generator.getVariableName("arg_" + name), Order.NONE];
   }
   return ["", Order.ATOMIC];
 };
