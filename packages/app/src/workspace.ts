@@ -11,7 +11,7 @@ const version = "v1";
 
 export const workspaceStore = reactive({
   workspace: ref(),
-  startBlocks: ref(),
+  demoProject: ref(),
 });
 
 export const optionsStore = reactive({
@@ -54,13 +54,106 @@ export const outputsStore = reactive({
   snackbarMsg: "" as string,
   snackbarTimeout: 2500 as number,
   snackbarColor: "green" as string,
-  export: {
-    name: "app" as string,
-    preset: { name: "console", description: "控制台机器人" },
-    port: 8080 as number,
-    platform: ["windows", "linux"] as string[],
-  },
 });
+
+export const exportConfig = reactive({
+  name: "app" as string,
+  preset: { name: "console", description: "控制台机器人" },
+  port: 8080 as number,
+  platform: ["windows", "linux"] as string[],
+  commandStart: ["/"] as string[],
+  superusers: [] as string[],
+  kwargs: {} as Record<string, any>,
+});
+
+const windowsScripts = {
+  install: `\
+# Step 1: Check if 'uv' is installed
+$uvVersion = try {
+    uv --version
+} catch {
+    $null
+}
+
+if ($uvVersion) {
+    Write-Host "UV is installed. Version: "
+    Write-Host $uvVersion
+} else {
+    # Step 2: If 'uv' is not installed, ask user for confirmation to install
+    Write-Host "UV is not installed on this system."
+    $confirmation = Read-Host "Do you want to install UV? (Press Enter to confirm or type 'n' to cancel)"
+    
+    if ($confirmation -eq '') {
+        Write-Host "Installing UV..."
+        Invoke-RestMethod https://astral.sh/uv/install.ps1 | Invoke-Expression
+        Write-Host "UV has been installed successfully."
+    } else {
+        Write-Host "Installation canceled."
+        exit
+    }
+}
+
+# Step 3: Create a Python virtual environment
+Write-Host "Creating a Python virtual environment with Python 3.12..."
+uv venv --python 3.12
+
+Write-Host "Python virtual environment created successfully."
+
+# Step 4: Install dependencies
+uv pip install -r pyproject.toml`,
+  run: `\
+$uvVersion = try {
+    uv --version
+} catch {
+    $null
+}
+
+if ($null -eq $uvVersion) {
+    Write-Host "Please run 'install.ps1' first."
+    exit
+}
+
+uv run nb run`,
+};
+
+const linuxScripts = {
+  install: `\
+#!/bin/bash
+
+# Step 1: Check if 'uv' is installed
+if command -v uv &> /dev/null
+then
+    echo "UV is installed. Version info:"
+    uv --version
+else
+    # Step 2: If 'uv' is not installed, ask user for confirmation to install
+    echo "UV is not installed on this system."
+    read -p "Do you want to install UV? (Press Enter to confirm or type 'n' to cancel): " confirmation
+    
+    if [ "$confirmation" == "" ]; then
+        echo "Installing UV..."
+        curl -LsSf https://astral.sh/uv/install.sh | sh
+        echo "UV has been installed successfully."
+    else
+        echo "Installation canceled."
+        exit 1
+    fi
+fi
+
+# Step 3: Create a Python virtual environment
+echo "Creating a Python virtual environment with Python 3.12..."
+uv venv --python 3.12
+
+echo "Python virtual environment created successfully."`,
+  run: `\
+if ! command -v uv &> /dev/null
+then
+    echo "Please run 'install.sh' first"
+    exit
+fi
+
+uv run nb run`,
+};
 
 export function setWorkspaceTheme(theme: string) {
   let workspace = Blockly.getMainWorkspace();
@@ -78,8 +171,12 @@ export function setWorkspaceTheme(theme: string) {
 export function saveJson() {
   const workspace = Blockly.getMainWorkspace();
   const data = Blockly.serialization.workspaces.save(workspace);
-  const json = JSON.stringify({ version: version, data: data });
-  localStorage.setItem("NoneBlockly", json);
+  const project = JSON.stringify({
+    version: version,
+    data: data,
+    config: exportConfig,
+  });
+  localStorage.setItem("NoneBlockly", project);
   outputsStore.snackbarColor = "green";
   outputsStore.snackbarMsg = "🤗 工作区已暂存";
   outputsStore.snackbar = true;
@@ -89,9 +186,10 @@ export function loadJson() {
   const workspace = Blockly.getMainWorkspace();
   const savedData = localStorage.getItem("NoneBlockly");
   if (savedData) {
-    const json = JSON.parse(savedData);
-    if (json.version === version) {
-      Blockly.serialization.workspaces.load(json.data, workspace);
+    const project = JSON.parse(savedData);
+    if (project.version === version) {
+      Blockly.serialization.workspaces.load(project.data, workspace);
+      Object.assign(exportConfig, project.config);
       outputsStore.snackbarColor = "green";
       outputsStore.snackbarMsg = "🥰 已恢复暂存工作区";
       outputsStore.snackbar = true;
@@ -107,9 +205,13 @@ export function loadJson() {
 }
 
 export function initWorkspaceState() {
-  let startBlocks = workspaceStore.startBlocks;
-  let workspace = Blockly.getMainWorkspace();
-  Blockly.serialization.workspaces.load(startBlocks, workspace);
+  const workspace = Blockly.getMainWorkspace();
+  const demoProject = workspaceStore.demoProject;
+  Blockly.serialization.workspaces.load(demoProject.data, workspace);
+  Object.assign(exportConfig, demoProject.config);
+  outputsStore.snackbarColor = "green";
+  outputsStore.snackbarMsg = "🥰 已加载工程示例";
+  outputsStore.snackbar = true;
   outputsStore.activeTab = "tab-0";
 }
 
@@ -149,132 +251,120 @@ function generatePyproject(code: string, preset: string) {
     dependencies.add("nonebot-adapter-onebot>=2.4.5");
   }
   return `\
-    [project]
-    name = "noneblockly-app"
-    version = "0.1.0"
-    description = "NoneBot project generated by NoneBlockly"
-    authors = [{name = "name", email = "name@example.com"}]
-    dependencies = [
-        ${Array.from(dependencies)
-          .map((dep) => `"${dep}"`)
-          .join(", \n")}
-    ]
-    requires-python = ">=3.9"
-    license = {text = "MIT"}
+[project]
+name = "noneblockly-app"
+version = "0.1.0"
+description = "NoneBot project generated by NoneBlockly"
+authors = [{name = "name", email = "name@example.com"}]
+dependencies = [
+    ${Array.from(dependencies)
+      .map((dep) => `"${dep}"`)
+      .join(", \n")}
+]
+requires-python = ">=3.9"
+license = {text = "MIT"}
 
-    [tool.nonebot]
-    adapters = [
-        { name = "Console", module_name = "nonebot.adapters.console" }
-    ]
-    plugin_dirs = ["plugins"]`;
+[tool.nonebot]
+adapters = [
+    ${adapters}
+]
+plugin_dirs = ["plugins"]`;
 }
 
-function generateEnv(port: number) {
+function generateInit(code: string) {
+  const plugins = new Set<string>();
+  const importLines = code.split("\n\n")[0].split("\n");
+  importLines.forEach((line) => {
+    if (line.startsWith("from nonebot_plugin_alconna")) {
+      plugins.add("nonebot_plugin_alconna");
+    } else if (line.startsWith("from nonebot_plugin_apscheduler")) {
+      plugins.add("nonebot_plugin_apscheduler");
+    } else if (line.startsWith("import nonebot_plugin_localstore")) {
+      plugins.add("nonebot_plugin_localstore");
+    }
+  });
   return `\
-    DRIVER=~fastapi+~httpx+~websockets
-    PORT=${port}`;
+from nonebot import require
+${Array.from(plugins)
+  .map((plugin) => `require("${plugin}")`)
+  .join("\n")}
+from .app import * # noqa`;
 }
 
-const windowsScripts = {
-  install: `\
-    # Step 1: Check if 'uv' is installed
-    $uvVersion = try {
-        uv --version
-    } catch {
-        $null
-    }
+function generateEnv(config: typeof exportConfig) {
+  let commandStart = "";
+  let superusers = "";
+  if (config.commandStart.length > 0) {
+    // quote strings
+    const items = config.commandStart.map((item) => JSON.stringify(item));
+    commandStart = `COMMAND_START=[${items.join(",")}]\n`;
+  }
+  if (config.superusers.length > 0) {
+    const items = config.superusers.map((item) => JSON.stringify(item));
+    superusers = `SUPERUSERS=[${items.join(",")}]\n`;
+  }
+  return `\
+DRIVER=~fastapi+~httpx+~websockets
+PORT=${config.port || 8080}
+${commandStart}${superusers}`;
+}
 
-    if ($uvVersion) {
-        Write-Host "UV is installed. Version: "
-        Write-Host $uvVersion
+export function exportProject() {
+  const workspace = Blockly.getMainWorkspace();
+  const data = Blockly.serialization.workspaces.save(workspace);
+  const project = JSON.stringify({
+    version: version,
+    data: data,
+    config: exportConfig,
+  });
+  const blob = new Blob([project], { type: "application/json" });
+  const jsonObjectUrl = URL.createObjectURL(blob);
+  const filename = `${exportConfig.name}.json`;
+  const anchor = document.createElement("a");
+  anchor.href = jsonObjectUrl;
+  anchor.download = filename;
+  anchor.click();
+  URL.revokeObjectURL(jsonObjectUrl);
+  outputsStore.snackbarColor = "green";
+  outputsStore.snackbarMsg = "🤗 已导出设计文件";
+  outputsStore.snackbar = true;
+}
+
+export function importProject(event: any) {
+  const file = event.target.files[0];
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    const project = JSON.parse(e.target?.result as string);
+    if (project.version === version) {
+      Blockly.getMainWorkspace().clear();
+      Blockly.serialization.workspaces.load(
+        project.data,
+        Blockly.getMainWorkspace(),
+      );
+      Object.assign(exportConfig, project.config);
+      outputsStore.snackbarColor = "green";
+      outputsStore.snackbarMsg = "🥰 已导入设计文件";
+      outputsStore.snackbar = true;
     } else {
-        # Step 2: If 'uv' is not installed, ask user for confirmation to install
-        Write-Host "UV is not installed on this system."
-        $confirmation = Read-Host "Do you want to install UV? (Press Enter to confirm or type 'n' to cancel)"
-        
-        if ($confirmation -eq '') {
-            Write-Host "Installing UV..."
-            Invoke-RestMethod https://astral.sh/uv/install.ps1 | Invoke-Expression
-            Write-Host "UV has been installed successfully."
-        } else {
-            Write-Host "Installation canceled."
-            exit
-        }
+      outputsStore.snackbarColor = "warning";
+      outputsStore.snackbarMsg = "❌ 无法识别选择的文件";
+      outputsStore.snackbar = true;
     }
-
-    # Step 3: Create a Python virtual environment
-    Write-Host "Creating a Python virtual environment with Python 3.12..."
-    uv venv --python 3.12
-
-    Write-Host "Python virtual environment created successfully."
-
-    # Step 4: Install dependencies
-    uv pip install -r pyproject.toml`,
-  run: `\
-    $uvVersion = try {
-        uv --version
-    } catch {
-        $null
-    }
-
-    if ($null -eq $uvVersion) {
-        Write-Host "Please run 'install.ps1' first."
-        exit
-    }
-
-    uv run nb run`,
-};
-
-const linuxScripts = {
-  install: `\
-    #!/bin/bash
-
-    # Step 1: Check if 'uv' is installed
-    if command -v uv &> /dev/null
-    then
-        echo "UV is installed. Version info:"
-        uv --version
-    else
-        # Step 2: If 'uv' is not installed, ask user for confirmation to install
-        echo "UV is not installed on this system."
-        read -p "Do you want to install UV? (Press Enter to confirm or type 'n' to cancel): " confirmation
-        
-        if [ "$confirmation" == "" ]; then
-            echo "Installing UV..."
-            curl -LsSf https://astral.sh/uv/install.sh | sh
-            echo "UV has been installed successfully."
-        else
-            echo "Installation canceled."
-            exit 1
-        fi
-    fi
-
-    # Step 3: Create a Python virtual environment
-    echo "Creating a Python virtual environment with Python 3.12..."
-    uv venv --python 3.12
-
-    echo "Python virtual environment created successfully."`,
-  run: `\
-    if ! command -v uv &> /dev/null
-    then
-        echo "Please run 'install.sh' first"
-        exit
-    fi
-
-    uv run nb run`,
-};
+  };
+  reader.readAsText(file);
+}
 
 export function exportZip() {
   let zip = new JSZip();
-  let workspace = Blockly.getMainWorkspace();
-  let code = pythonGenerator.workspaceToCode(workspace);
-  zip.file("plugins/plugin_exported.py", code);
-  zip.file(
-    "pyproject.toml",
-    generatePyproject(code, outputsStore.export.preset.name),
-  );
-  zip.file(".env.prod", generateEnv(outputsStore.export.port));
-  outputsStore.export.platform.forEach((platform) => {
+  const workspace = Blockly.getMainWorkspace();
+  const code = pythonGenerator.workspaceToCode(workspace);
+  const config = exportConfig;
+  console.log(config);
+  zip.file(`plugins/plugin_${config.name}/__init__.py`, generateInit(code));
+  zip.file(`plugins/plugin_${config.name}/app.py`, code);
+  zip.file("pyproject.toml", generatePyproject(code, config.preset.name));
+  zip.file(".env.prod", generateEnv(config));
+  config.platform.forEach((platform) => {
     if (platform === "windows") {
       zip.file("install.ps1", windowsScripts.install);
       zip.file("run.ps1", windowsScripts.run);
@@ -287,6 +377,6 @@ export function exportZip() {
   outputsStore.snackbarMsg = "😎 已导出 Python 项目";
   outputsStore.snackbar = true;
   zip.generateAsync({ type: "blob" }).then(function (content) {
-    saveAs(content, `${outputsStore.export.name}.zip`);
+    saveAs(content, `${config.name}.zip`);
   });
 }

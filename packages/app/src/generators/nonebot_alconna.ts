@@ -3,6 +3,7 @@ import * as Blockly from "blockly/core";
 
 import { AlconnaBlock, AlconnaArgGetBlock } from "@/blocks/nonebot_alconna";
 import { getAlconnaArg } from "@/blocks/fields/alconna_helper";
+import { getGlobalStatement } from "./helper";
 
 export const forBlock = Object.create(null);
 
@@ -11,8 +12,10 @@ forBlock["nonebot_on_alconna"] = function (
   generator: PythonGenerator,
 ) {
   const command = block.getFieldValue("COMMAND");
-  const checkbox_tome = block.getFieldValue("TOME") === "TRUE";
-  const statement_handle =
+  const tomeCheckbox = block.getFieldValue("TOME") === "TRUE";
+  const globalStatement =
+    generator.INDENT + getGlobalStatement(block, generator);
+  const handleStatement =
     generator.statementToCode(block, "HANDLE") || generator.PASS;
   // generator["definitions_"]["from nonebot.adapters import Bot"] = "from nonebot.adapters import Bot";
   // generator["definitions_"]["from nonebot.adapters import Event"] = "from nonebot.adapters import Event";
@@ -20,38 +23,32 @@ forBlock["nonebot_on_alconna"] = function (
     "from nonebot.matcher import Matcher";
   generator["definitions_"]["from nonebot_plugin_alconna import on_alconna"] =
     "from nonebot_plugin_alconna import on_alconna";
-  let tome_statement = "";
-  if (checkbox_tome) {
+  let tomeStatement = "";
+  if (tomeCheckbox) {
     generator["definitions_"]["from nonebot.rule import to_me"] =
       "from nonebot.rule import to_me";
-    tome_statement = ", rule=to_me()";
+    tomeStatement = ", rule=to_me()";
   }
   let args: String[] = [];
-  let args_matcher = "";
-  let args_function = "";
+  let argsMatcher = "";
+  let argsFunction = "";
   for (let n = 0; n < block.itemCount_; n++) {
     const block_type = block
       .getInput("ARG" + String(n))
       ?.connection?.targetConnection?.getSourceBlock().type;
-    const arg_code = generator.valueToCode(
-      block,
-      "ARG" + String(n),
-      Order.NONE,
-    );
+    const argCode = generator.valueToCode(block, "ARG" + String(n), Order.NONE);
     if (block_type === "alconna_const") {
-      args_matcher += ` ${arg_code}`;
+      argsMatcher += ` ${argCode}`;
     } else if (block_type === "alconna_arg") {
-      args_matcher += ` {${arg_code}}`;
-      args_function += `, ${arg_code}`;
+      argsMatcher += ` {${argCode}}`;
+      argsFunction += `, ${argCode}`;
       // get name before `: type`
-      args.push(arg_code.split(":")[0]);
+      args.push(argCode.split(":")[0]);
     }
   }
-  let code = `@on_alconna("${command}${args_matcher}"${tome_statement}).handle()\n`;
+  let code = `@on_alconna("${command}${argsMatcher}"${tomeStatement}).handle()\n`;
   // code += `async def _(matcher: Matcher, bot: Bot, event: Event, message: Annotated[Message, CommandArg()]):\n`;
-  code += `async def _(matcher: Matcher${args_function}):\n`;
-  code += statement_handle;
-  code += "\n";
+  code += `async def _(matcher: Matcher${argsFunction}):\n${globalStatement}${handleStatement}\n`;
   return code;
 };
 
@@ -80,18 +77,24 @@ forBlock["alconna_arg_get"] = function (
   generator: PythonGenerator,
 ) {
   // This generator will also update the dropdown list
-  let name_real = block.getFieldValue("NAME");
+  let name = block.getFieldValue("NAME");
   const args = getAlconnaArg(block);
   let options = new Array();
+  // If the block is not initialized, it is reloading from saved
+  // Should rebuild the dropdown list and set the name to the saved name `block.name_`
   if (!block.isInitialized_ && block.name_ !== "") {
-    // Read from saved
-    name_real = block.name_;
+    name = block.name_;
     block.isInitialized_ = true;
-    if (args.indexOf(name_real) !== -1) {
-      options.push([name_real, name_real]);
+    // Make sure the selected value is the first one of the dropdown list
+    // Due to the dynamic dropdowns are not responding to set value calls correctly
+    // https://github.com/google/blockly/issues/3099
+    // This will also cause warnings in console:
+    // `Cannot set the dropdown's value to an unavailable option.`
+    if (args.indexOf(name) !== -1) {
+      options.push([name, name]);
     }
     args.forEach((arg) => {
-      if (arg !== name_real) {
+      if (arg !== name) {
         options.push([arg, arg]);
       }
     });
@@ -101,9 +104,11 @@ forBlock["alconna_arg_get"] = function (
       ?.appendField("获取参数")
       .appendField(new Blockly.FieldDropdown(options), "NAME");
   } else {
+    // If the block is initialized, update the saved name and rebuild the dropdown list
     args.forEach((arg) => {
       options.push([arg, arg]);
     });
+    block.name_ = name;
   }
   if (args.length === 0) {
     this.removeInput("PARAMS");
@@ -113,15 +118,15 @@ forBlock["alconna_arg_get"] = function (
       .appendField(new Blockly.FieldDropdown([["-", ""]]), "NAME");
     return ["", Order.ATOMIC];
   }
-  if (!args.find((arg) => arg === name_real)) {
+  if (!args.find((arg) => arg === name)) {
     this.removeInput("PARAMS");
     this.setWarningText("");
     this.appendDummyInput("PARAMS")
       ?.appendField("获取参数")
       .appendField(new Blockly.FieldDropdown(options), "NAME");
   }
-  if (name_real) {
-    return [generator.getVariableName("arg_" + name_real), Order.NONE];
+  if (name) {
+    return [generator.getVariableName("arg_" + name), Order.NONE];
   }
   return ["", Order.ATOMIC];
 };

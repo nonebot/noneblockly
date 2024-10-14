@@ -1,14 +1,18 @@
 import { PythonGenerator, Order } from "blockly/python";
 import * as Blockly from "blockly/core";
 
+import { getGlobalStatement } from "./helper";
+
 export const forBlock = Object.create(null);
 
 forBlock["nonebot_on_message"] = function (
   block: Blockly.Block,
   generator: PythonGenerator,
 ) {
-  const checkbox_tome = block.getFieldValue("TOME") === "TRUE";
-  const statements_handle =
+  const tomeCheckbox = block.getFieldValue("TOME") === "TRUE";
+  const globalStatement =
+    generator.INDENT + getGlobalStatement(block, generator);
+  const handleStatement =
     generator.statementToCode(block, "HANDLE") || generator.PASS;
   generator["definitions_"]["from typing import Annotated"] =
     "from typing import Annotated";
@@ -22,17 +26,15 @@ forBlock["nonebot_on_message"] = function (
     "from nonebot.params import EventMessage";
   generator["definitions_"]["from nonebot.plugin import on_message"] =
     "from nonebot.plugin import on_message";
-  let tome_statement = "";
-  if (checkbox_tome) {
+  let tomeStatement = "";
+  if (tomeCheckbox) {
     generator["definitions_"]["from nonebot.rule import to_me"] =
       "from nonebot.rule import to_me";
-    tome_statement = "rule=to_me()";
+    tomeStatement = "rule=to_me()";
   }
-  let code = `@on_message(${tome_statement}).handle()\n`;
+  let code = `@on_message(${tomeStatement}).handle()\n`;
   // code += `async def _(matcher: Matcher, bot: Bot, event: Event, message: Annotated[Message, EventMessage()]):\n`;
-  code += `async def _(matcher: Matcher, message: Annotated[Message, EventMessage()]):\n`;
-  code += statements_handle;
-  code += "\n";
+  code += `async def _(matcher: Matcher, message: Annotated[Message, EventMessage()]):\n${globalStatement}${handleStatement}\n`;
   return code;
 };
 
@@ -40,9 +42,11 @@ forBlock["nonebot_on_command"] = function (
   block: Blockly.Block,
   generator: PythonGenerator,
 ) {
-  const text_command = block.getFieldValue("COMMAND");
-  const checkbox_tome = block.getFieldValue("TOME") === "TRUE";
-  const statements_handle =
+  const commandText = block.getFieldValue("COMMAND");
+  const tomeCheckbox = block.getFieldValue("TOME") === "TRUE";
+  const globalStatement =
+    generator.INDENT + getGlobalStatement(block, generator);
+  const handleStatement =
     generator.statementToCode(block, "HANDLE") || generator.PASS;
   generator["definitions_"]["from typing import Annotated"] =
     "from typing import Annotated";
@@ -57,16 +61,14 @@ forBlock["nonebot_on_command"] = function (
   generator["definitions_"]["from nonebot.plugin import on_command"] =
     "from nonebot.plugin import on_command";
   let tome_statement = "";
-  if (checkbox_tome) {
+  if (tomeCheckbox) {
     generator["definitions_"]["from nonebot.rule import to_me"] =
       "from nonebot.rule import to_me";
     tome_statement = ", rule=to_me()";
   }
-  let code = `@on_command("${text_command}"${tome_statement}).handle()\n`;
+  let code = `@on_command("${commandText}"${tome_statement}).handle()\n`;
   // code += `async def _(matcher: Matcher, bot: Bot, event: Event, message: Annotated[Message, CommandArg()]):\n`;
-  code += `async def _(matcher: Matcher, message: Annotated[Message, CommandArg()]):\n`;
-  code += statements_handle;
-  code += "\n";
+  code += `async def _(matcher: Matcher, message: Annotated[Message, CommandArg()]):\n${globalStatement}${handleStatement}\n`;
   return code;
 };
 

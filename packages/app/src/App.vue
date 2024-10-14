@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, shallowRef } from "vue";
+import { onMounted } from "vue";
 // Components
 import ContentCard from "@/components/ContentCard.vue";
 import BlocklyTab from "@/components/BlocklyTab.vue";
@@ -11,7 +11,7 @@ import ButtonPanel from "@/components/ButtonPanel.vue";
 import { loadJson, generateCode } from "@/workspace";
 import { optionsStore, workspaceStore } from "@/workspace";
 // Workspace data
-import { startBlocks } from "@/default";
+import { demoProject } from "@/default";
 // Blockly config
 import * as Blockly from "blockly";
 import { blocks } from "@/blocks";
@@ -29,11 +29,13 @@ pythonGenerator.addReservedWords(
   "json,Annotated,Matcher,Message,EventMessage,CommandArg,on_command,on_message,on_alconna,to_me",
 );
 
+// @ts-ignore
 Blockly.setLocale(ZhHans);
+Blockly.ContextMenuItems.registerCommentOptions();
 
 // Set store data
 optionsStore.toolbox = toolbox;
-workspaceStore.startBlocks = startBlocks;
+workspaceStore.demoProject = demoProject;
 const workspace = Blockly.getMainWorkspace();
 workspaceStore.workspace = workspace;
 
