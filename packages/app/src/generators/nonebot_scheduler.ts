@@ -1,28 +1,27 @@
 import { PythonGenerator, Order } from "blockly/python";
 import * as Blockly from "blockly/core";
 
+import { getGlobalStatement } from "./helper";
+
 export const forBlock = Object.create(null);
 
 forBlock["scheduler_add"] = function (
   block: Blockly.Block,
   generator: PythonGenerator,
 ) {
-  const value_time = generator.valueToCode(block, "TIME", Order.ATOMIC);
-  const value_id = generator.valueToCode(block, "ID", Order.ATOMIC);
-  if (
-    value_time === "" ||
-    value_time === "None" ||
-    value_id === "" ||
-    value_id === "None"
-  ) {
+  const time = generator.valueToCode(block, "TIME", Order.ATOMIC);
+  const id = generator.valueToCode(block, "ID", Order.ATOMIC);
+  if (time === "" || time === "None" || id === "" || id === "None") {
     return "";
   }
   generator["definitions_"][
     "from nonebot_plugin_apscheduler import scheduler"
   ] = "from nonebot_plugin_apscheduler import scheduler";
-  const statement_handle =
+  const globalStatement =
+    generator.INDENT + getGlobalStatement(block, generator);
+  const handleStatement =
     generator.statementToCode(block, "HANDLE") || generator.PASS;
-  const code = `@scheduler.scheduled_job(${value_time}, id=${value_id})\nasync def _():\n${statement_handle}\n`;
+  const code = `@scheduler.scheduled_job(${time}, id=${id})\nasync def _():\n${globalStatement}${handleStatement}\n`;
   return code;
 };
 
@@ -30,11 +29,11 @@ forBlock["scheduler_remove"] = function (
   block: Blockly.Block,
   generator: PythonGenerator,
 ) {
-  const value_id = generator.valueToCode(block, "ID", Order.ATOMIC);
+  const id = generator.valueToCode(block, "ID", Order.ATOMIC);
   generator["definitions_"][
     "from nonebot_plugin_apscheduler import scheduler"
   ] = "from nonebot_plugin_apscheduler import scheduler";
-  const code = `scheduler.remove_job(${value_id})\n`;
+  const code = `scheduler.remove_job(${id})\n`;
   return code;
 };
 
